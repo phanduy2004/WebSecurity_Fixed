@@ -1,0 +1,168 @@
+<!doctype html>
+<html class="no-js" lang="zxx" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/layout-web.html}">
+
+<body>
+<div layout:fragment="content">
+    <div class="breadcrumb-area gray-bg">
+        <div class="container">
+            <div class="breadcrumb-content">
+                <ul>
+                    <li><a href="../../../static/index.html">Home</a></li>
+                    <li class="active">Wishlist</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- shopping-cart-area start -->
+    <div class="cart-main-area pt-95 pb-100">
+        <div class="container">
+            <h3 class="page-title">Your cart items</h3>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                    <form action="#">
+                        <div class="table-content table-responsive wishlist">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Product Name</th>
+                                    <th>Size</th> <!-- Thêm cột Size -->
+                                    <th>Unit Price</th>
+                                    <th>Qty</th>
+                                    <th>Subtotal</th>
+                                    <th>Action</th> <!-- Cột Action -->
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- Lặp qua các sản phẩm trong giỏ hàng -->
+                                <tr th:each="item : ${wishItems}"
+                                    th:id="'wish-item-' + ${item.id.user_id} + '-' + ${item.id.pro_id} + '-' + ${item.id.size.replace(' ', '-')}">
+
+                                <td class="product-thumbnail">
+                                        <a href="#"><img th:src="@{${item.product.imageLink}}" alt="Product Image" width="100"></a>
+                                    </td>
+                                    <td class="product-name">
+                                        <a href="#" th:text="${item.product.name}"></a>
+                                    </td>
+                                    <td class="product-size">
+                                        <span th:text="${item.id.size}"></span>
+                                    </td>
+                                    <td class="product-price-cart">
+                                        <span class="amount" th:text="${item.price}"></span>
+                                    </td>
+                                    <td class="product-quantity">
+                                        <div class="cart-plus-minus">
+                                            <input class="cart-plus-minus-box"
+                                                   type="number"
+                                                   name="qtybutton"
+                                                   min="1"
+                                                   th:value="${item.quantity}"
+                                                   th:data-user-id="${item.id.user_id}"
+                                                   th:data-pro-id="${item.id.pro_id}"
+                                                   th:data-size="${item.id.size}"
+                                                   th:data-price="${item.price}">
+                                        </div>
+                                    </td>
+
+                                    <td class="product-subtotal">
+                                        <span th:text="${item.quantity * item.price}" class="subtotal"></span>
+                                    </td>
+
+                                    <!-- Nút Action (Add to Cart) -->
+                                    <td class="product-wishlist-cart">
+                                        <button class="add-to-cart-btn"
+                                                th:data-user-id="${item.id.user_id}"
+                                                th:data-pro-id="${item.id.pro_id}"
+                                                th:data-price="${item.price}"
+                                                th:data-qty="${item.quantity}"
+                                                th:data-size="${item.id.size}">
+                                            Add to Cart
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                </tbody>
+                                <script>
+                                    document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+                                        button.addEventListener('click', function (event) {
+                                            event.preventDefault();
+
+                                            // Lấy dữ liệu từ các thuộc tính data-*
+                                            const userId = this.getAttribute('data-user-id');
+                                            const proId = this.getAttribute('data-pro-id');
+                                            const size = this.getAttribute('data-size');
+
+                                            // Lấy số lượng từ input thay vì `data-qty`
+                                            const inputElement = this.closest('tr').querySelector('.cart-plus-minus-box');
+                                            const qty = inputElement ? inputElement.value : 1;
+
+                                            // Lấy giá sản phẩm từ `data-price`
+                                            const price = this.getAttribute('data-price');
+
+                                            // Hiển thị thông báo xác nhận
+                                            if (confirm('Bạn có chắc chắn muốn thêm sản phẩm này vào giỏ hàng?')) {
+                                                this.disabled = true; // Vô hiệu hóa nút để tránh click liên tục
+                                                this.textContent = 'Đang xử lý...'; // Hiển thị trạng thái loading
+
+                                                fetch(`/user-wishList/addToCart?user_id=${userId}&pro_id=${proId}&size=${size}&qty=${qty}&price=${price}`, {
+                                                    method: 'GET',
+                                                    headers: {'Content-Type': 'application/json'}
+                                                })
+
+                                                        .then(response => {
+                                                        // Nếu phản hồi không OK (trạng thái khác 200-299)
+                                                        if (!response.ok) {
+                                                            throw new Error('Không thể kết nối máy chủ.');
+                                                        }
+                                                        return response.json();
+                                                    })
+                                                    .then(data => {
+                                                        if (data.success) {
+                                                            alert('Sản phẩm đã được thêm vào giỏ hàng.');
+                                                            // Xóa dòng sản phẩm khỏi bảng (HTML) wishlist
+                                                            const rowId = `wish-item-${userId}-${proId}-${size.replace(' ', '-')}`;
+                                                            const row = document.getElementById(rowId);
+                                                            if (row) {
+                                                                row.remove();
+                                                            }
+                                                        } else {
+                                                            alert('Lỗi khi thêm sản phẩm vào giỏ hàng.');
+                                                        }
+                                                    })
+                                                    .catch(error => {
+                                                        console.error('Lỗi:', error);
+                                                        alert('Lỗi khi kết nối đến server.');
+                                                    })
+                                                    .finally(() => {
+                                                        this.disabled = false; // Mở lại nút
+                                                        this.textContent = 'Add to Cart'; // Khôi phục trạng thái nút
+                                                    });
+                                            }
+                                        });
+                                    });
+                                </script>
+
+                            </table>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script th:src="@{/assets/js/vendor/jquery-1.12.4.min.js}"></script>
+<script th:src="@{/assets/js/popper.js}"></script>
+<script th:src="@{/assets/js/bootstrap.min.js}"></script>
+<script th:src="@{/assets/js/imagesloaded.pkgd.min.js}"></script>
+<script th:src="@{/assets/js/isotope.pkgd.min.js}"></script>
+<script th:src="@{/assets/js/ajax-mail.js}"></script>
+<script th:src="@{/assets/js/owl.carousel.min.js}"></script>
+<script th:src="@{/assets/js/plugins.js}"></script>
+<script th:src="@{/assets/js/main.js}"></script>
+</body>
+
+<!-- Mirrored from htmldemo.net/billy/billy/wishlist.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 06 Nov 2024 15:24:32 GMT -->
+</html>

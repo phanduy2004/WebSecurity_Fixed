@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Enter Verification Code</title>
+    <!-- Include your CSS stylesheets and other necessary resources here -->
+
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <!-- Favicon icon -->
+    <link rel="icon" th:href="@{/assets/images/favicon.ico}" type="image/x-icon">
+    <!-- Google font-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet">
+    <!-- Required Fremwork -->
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/css/bootstrap/css/bootstrap.min.css}">
+    <!-- waves.css -->
+    <link rel="stylesheet" th:href="@{/assets/pages/waves/css/waves.min.css}" type="text/css" media="all">
+    <!-- themify-icons line icon -->
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/icon/themify-icons/themify-icons.css}">
+    <!-- ico font -->
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/icon/icofont/css/icofont.css}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/icon/font-awesome/css/font-awesome.min.css}">
+    <!-- Style.css -->
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/css/style.css}">
+    <style>
+        body {
+            background-color: #ffd5d6;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            background: #FFFFFF;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 9px;
+        }
+
+        button {
+            background-color: #2550ec;
+            width: 100%;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2550ec;
+        }
+
+        p {
+            text-align: center;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<section>
+    <div class="container">
+        <h2 style="color: #000000; font-family: 'Arial', sans-serif;font-size: x-large">OriShop</h2>
+
+        <p th:text="' Mã xác nhận đã được gửi vui lòng kiểm tra: ' + ${resetPasswordRequest.email}"></p>
+
+        <form th:action="@{/auth/enter-verification-code}" th:object="${resetPasswordRequest}" method="post">
+            <div>
+                <h2 style="color: #000000; font-family: 'Arial', sans-serif;font-size: x-large"> Verification </h2>
+
+                <input type="text" id="code" name="code" th:field="*{code}" placeholder="Enter Verification Code"required>
+            </div>
+
+            <div>
+                <input type="hidden" th:field="*{email}">
+                <button type="submit">Verify Code</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<script type="text/javascript" th:src="@{/assets/js/jquery/jquery.min.js}"></script>
+<!-- Include your other scripts here -->
+
+</body>
+</html>

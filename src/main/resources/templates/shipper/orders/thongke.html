@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" class="light scroll-smooth group" data-layout="vertical" data-sidebar="dark" data-sidebar-size="lg" data-mode="dark" data-topbar="dark"
+      data-skin="default" data-navbar="sticky" data-content="fluid" dir="ltr"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{shipper/layout-admin.html}">
+
+<body class="text-base bg-body-bg text-body font-public dark:text-zink-100 dark:bg-zink-800 group-data-[skin=bordered]:bg-body-bordered group-data-[skin=bordered]:dark:bg-zink-700">
+<section layout:fragment="content">
+
+    <div class="group-data-[sidebar-size=sm]:min-h-sm group-data-[sidebar-size=sm]:relative">
+        <div class="relative min-h-screen group-data-[sidebar-size=sm]:min-h-sm">
+
+            <div class="group-data-[sidebar-size=lg]:ltr:md:ml-vertical-menu group-data-[sidebar-size=lg]:rtl:md:mr-vertical-menu group-data-[sidebar-size=md]:ltr:ml-vertical-menu-md group-data-[sidebar-size=md]:rtl:mr-vertical-menu-md group-data-[sidebar-size=sm]:ltr:ml-vertical-menu-sm group-data-[sidebar-size=sm]:rtl:mr-vertical-menu-sm pt-[calc(theme('spacing.header')_*_1)] pb-[calc(theme('spacing.header')_*_0.8)] px-4 group-data-[navbar=bordered]:pt-[calc(theme('spacing.header')_*_1.3)] group-data-[navbar=hidden]:pt-0 group-data-[layout=horizontal]:mx-auto group-data-[layout=horizontal]:max-w-screen-2xl group-data-[layout=horizontal]:px-0 group-data-[layout=horizontal]:group-data-[sidebar-size=lg]:ltr:md:ml-auto group-data-[layout=horizontal]:group-data-[sidebar-size=lg]:rtl:md:mr-auto group-data-[layout=horizontal]:md:pt-[calc(theme('spacing.header')_*_1.6)] group-data-[layout=horizontal]:px-3 group-data-[layout=horizontal]:group-data-[navbar=hidden]:pt-[calc(theme('spacing.header')_*_0.9)]">
+                <div class="container-fluid group-data-[content=boxed]:max-w-boxed mx-auto">
+
+                    <div class="flex flex-col gap-2 py-4 md:flex-row md:items-center print:hidden">
+                        <div class="grow">
+                            <h5 class="text-16">Order Lists</h5>
+                        </div>
+                        <ul class="flex items-center gap-2 text-sm font-normal shrink-0">
+                            <li class="relative before:content-['\ea54'] before:font-remix ltr:before:-right-1 rtl:before:-left-1  before:absolute before:text-[18px] before:-top-[3px] ltr:pr-4 rtl:pl-4 before:text-slate-400 dark:text-zink-200">
+                                <a href="#!" class="text-slate-400 dark:text-zink-200">Ecommerce</a>
+                            </li>
+                            <li class="text-slate-700 dark:text-zink-100">
+                                Order Lists
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="grid grid-cols-1 gap-x-5 md:grid-cols-2 2xl:grid-cols-12">
+                        <div class="2xl:col-span-2 2xl:row-span-1">
+                            <div class="card">
+                                <div class="flex items-center gap-3 card-body">
+                                    <div class="flex items-center justify-center rounded-md size-12 text-15 bg-custom-50 text-custom-500 dark:bg-custom-500/20 shrink-0"><i data-lucide="boxes"></i></div>
+                                    <div class="grow">
+                                        <h5 class="mb-1 text-16" th:text="${totalOrders}">0</h5>
+                                        <p class="text-slate-500 dark:text-zink-200">Total Orders</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!--end col-->
+                        <div class="2xl:col-span-2 2xl:row-span-1">
+                            <div class="card">
+                                <div class="flex items-center gap-3 card-body">
+                                    <div class="flex items-center justify-center text-purple-500 rounded-md size-12 text-15 bg-purple-50 dark:bg-purple-500/20 shrink-0"><i data-lucide="truck"></i></div>
+                                    <div class="grow">
+                                        <h5 class="mb-1 text-16" th:text="${shipod}">0</h5>
+                                        <p class="text-slate-500 dark:text-zink-200">Shipping Orders</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!--end col-->
+                        <div class="2xl:col-span-2 2xl:row-span-1">
+                            <div class="card">
+                                <div class="flex items-center gap-3 card-body">
+                                    <div class="flex items-center justify-center text-green-500 rounded-md size-12 text-15 bg-green-50 dark:bg-green-500/20 shrink-0"><i data-lucide="package-check"></i></div>
+                                    <div class="grow">
+                                        <h5 class="mb-1 text-16" th:text="${deliod}">0</h5>
+                                        <p class="text-slate-500 dark:text-zink-200">Delivered Orders</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!--end col-->
+                        <div class="2xl:col-span-2 2xl:row-span-1">
+                            <div class="card">
+                                <div class="flex items-center gap-3 card-body">
+                                    <div class="flex items-center justify-center text-red-500 rounded-md size-12 text-15 bg-red-50 dark:bg-red-500/20 shrink-0"><i data-lucide="package-x"></i></div>
+                                    <div class="grow">
+                                        <h5 class="mb-1 text-16 " th:text="${cancelod}">0</h5>
+                                        <p class="text-slate-500 dark:text-zink-200">Cancelled Orders</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!--end col-->
+                        <div class="2xl:col-span-2 2xl:row-span-1">
+                            <div class="card">
+                                <div class="flex items-center gap-3 card-body">
+                                    <div class="flex items-center justify-center text-yellow-500 rounded-md size-12 text-15 bg-yellow-50 dark:bg-yellow-500/20 shrink-0"><i data-lucide="loader"></i></div>
+                                    <div class="grow">
+                                        <h5 class="mb-1 text-16" th:text="${returnod}">0</h5>
+                                        <p class="text-slate-500 dark:text-zink-200">Return Orders</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!--end col-->
+                    </div><!--end grid-->
+
+                    <div class="grid grid-cols-1 gap-x-5 md:grid-cols-5 2xl:grid-cols-12">
+                        <!-- Thẻ Canvas cho Biểu đồ -->
+                        <div class="2xl:col-span-2 2xl:row-span-1">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="mb-4 text-16">Order Statistics</h5>
+                                    <canvas id="orderChart"></canvas>
+                                </div>
+                            </div>
+                        </div><!--end col-->
+                    </div>
+                    <script th:inline="javascript">
+                        var totalOrders = /*[[${totalOrders}]]*/ 0;
+                        var shipod = /*[[${shipod}]]*/ 0;
+                        var deliod = /*[[${deliod}]]*/ 0;
+                        var cancelod = /*[[${cancelod}]]*/ 0;
+                        var returnod = /*[[${returnod}]]*/ 0;
+                    </script>
+                    <script>
+                        var ctx = document.getElementById('orderChart').getContext('2d');
+                        var orderChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: ['Total Orders', 'Shipping Orders', 'Delivered Orders', 'Cancelled Orders', 'Return Orders'],
+                                datasets: [{
+                                    label: 'Order Statistics',
+                                    data: [totalOrders,shipod,deliod,cancelod,returnod], // Dữ liệu động từ backend
+                                    backgroundColor: [
+                                        'rgba(75, 192, 192, 0.2)',
+                                        'rgba(255, 159, 64, 0.2)',
+                                        'rgba(54, 162, 235, 0.2)',
+                                        'rgba(255, 99, 132, 0.2)',
+                                        'rgba(255, 206, 86, 0.2)'
+                                    ],
+                                    borderColor: [
+                                        'rgba(75, 192, 192, 1)',
+                                        'rgba(255, 159, 64, 1)',
+                                        'rgba(54, 162, 235, 1)',
+                                        'rgba(255, 99, 132, 1)',
+                                        'rgba(255, 206, 86, 1)'
+                                    ],
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        position: 'top',
+                                    },
+                                    tooltip: {
+                                        enabled: true
+                                    }
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    </script>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
+

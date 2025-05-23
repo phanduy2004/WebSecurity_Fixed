@@ -1,0 +1,224 @@
+<!doctype html>
+<html class="no-js" lang="zxx" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/layout-web.html}">
+
+<!-- Mirrored from htmldemo.net/billy/billy/cart-page.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 06 Nov 2024 15:24:31 GMT -->
+<body>
+<div layout:fragment="content">
+    <div class="breadcrumb-area gray-bg">
+        <div class="container">
+            <div class="breadcrumb-content">
+                <ul>
+                    <li><a th:src="@{/}">Home</a></li>
+                    <li class="active">Cart</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- shopping-cart-area start -->
+    <div class="cart-main-area pt-95 pb-100">
+        <div class="container">
+            <h3 class="page-title">Your cart items</h3>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                    <form action="#">
+                        <div class="table-content table-responsive">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Product Name</th>
+                                    <th>Size</th> <!-- Thêm cột Size -->
+                                    <th>Unit Price</th>
+                                    <th>Qty</th>
+                                    <th>Subtotal</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- Lặp qua các sản phẩm trong giỏ hàng -->
+                                <tbody>
+                                <!-- Lặp qua các sản phẩm trong giỏ hàng -->
+                                <tr th:each="item : ${cartItems}" th:id="'cart-item-' + ${item.id.user_id} + '-' + ${item.id.pro_id} + '-' + ${item.id.size}">
+                                    <td class="product-thumbnail">
+                                        <a href="#"><img th:src="@{${item.product.imageLink}}" alt="Product Image" width="100"></a>
+                                    </td>
+                                    <td class="product-name">
+                                        <a href="#" th:text="${item.product.name}"></a>
+                                    </td>
+                                    <td class="product-size">
+                                        <span th:text="${item.id.size}"></span>
+                                    </td>
+                                    <td class="product-price-cart">
+                                        <span class="amount" th:text="${item.price}"></span>
+                                    </td>
+                                    <td class="product-quantity">
+                                        <div class="cart-plus-minus">
+                                            <input class="cart-plus-minus-box" type="number" name="qtybutton" min="1" th:value="${item.quantity}"
+                                                   th:data-user-id="${item.id.user_id}"
+                                                   th:data-pro-id="${item.id.pro_id}"
+                                                   th:data-size="${item.id.size}"
+                                                   th:data-price="${item.price}">
+                                        </div>
+                                    </td>
+
+
+                                    <td class="product-subtotal">
+                                        <span th:text="${item.quantity * item.price}" class="subtotal"></span>
+                                    </td>
+                                    <td class="product-remove">
+                                        <button class="remove-item"
+                                                th:data-user-id="${item.id.user_id}"
+                                                th:data-pro-id="${item.id.pro_id}"
+                                                th:data-size="${item.id.size}">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    const totalAmountEl = document.getElementById('total-amount');
+
+                                    // 🛠️ **Xử lý xóa sản phẩm**
+                                    document.querySelectorAll('.remove-item').forEach(button => {
+                                        button.addEventListener('click', function (event) {
+                                            event.preventDefault();
+                                            const userId = this.getAttribute('data-user-id');
+                                            const proId = this.getAttribute('data-pro-id');
+                                            const size = this.getAttribute('data-size');
+
+                                            if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
+                                                // Gửi yêu cầu xóa sản phẩm đến backend
+                                                fetch(`/user-cart/remove?user_id=${userId}&pro_id=${proId}&size=${size}`, {
+                                                    method: 'DELETE',
+                                                    headers: { 'Content-Type': 'application/json' }
+                                                })
+                                                    .then(response => response.json())
+                                                    .then(data => {
+                                                        if (data.success) {
+                                                            // Tìm và xóa sản phẩm khỏi DOM
+                                                            const row = document.getElementById(`cart-item-${userId}-${proId}-${size}`);
+                                                            if (row) {
+                                                                row.remove(); // Xóa sản phẩm khỏi HTML
+                                                            }
+                                                            updateTotalAmount(); // Cập nhật lại tổng tiền
+                                                            alert('Sản phẩm đã được xóa!');
+                                                        } else {
+                                                            alert('Lỗi: Không thể xóa sản phẩm.');
+                                                        }
+                                                    })
+                                                    .catch(error => {
+                                                        console.error('Lỗi:', error);
+                                                        alert('Lỗi khi kết nối đến server');
+                                                    });
+                                            }
+                                        });
+                                    });
+
+                                    document.querySelectorAll('.cart-plus-minus-box').forEach(input => {
+                                        input.addEventListener('input', function () {
+                                            const userId = this.getAttribute('data-user-id');
+                                            const productId = this.getAttribute('data-pro-id');
+                                            const size = this.getAttribute('data-size');
+                                            const price = parseFloat(this.getAttribute('data-price'));
+                                            let quantity = parseInt(this.value);
+
+                                            // Nếu số lượng không hợp lệ, đặt lại về 1
+                                            if (quantity <= 0) {
+                                                alert('Số lượng phải lớn hơn 0');
+                                                this.value = 1;
+                                                quantity = 1;  // Đảm bảo luôn có giá trị hợp lệ
+                                            }
+
+                                            // Kiểm tra URL và các tham số được truyền
+                                            const url = `/user-cart/update?user_id=${userId}&pro_id=${productId}&size=${size}&quantity=${quantity}`;
+                                            console.log("Request URL: " + url);  // In ra URL để kiểm tra
+
+                                            // Gửi yêu cầu PUT để cập nhật số lượng sản phẩm
+                                            fetch(url, {
+                                                method: 'PUT',
+                                                headers: { 'Content-Type': 'application/json' }
+                                            })
+                                                .then(response => response.json())
+                                                .then(data => {
+                                                    if (data.success) {
+                                                        // Cập nhật lại subtotal của sản phẩm
+                                                        const subtotalEl = this.closest('tr').querySelector('.subtotal');
+                                                        subtotalEl.textContent = (price * quantity).toFixed(2);
+
+                                                        // Cập nhật tổng tiền giỏ hàng
+                                                        updateTotalAmount();
+                                                    } else {
+                                                        alert('Lỗi: Không thể cập nhật số lượng.');
+                                                    }
+                                                })
+                                                .catch(error => console.error('Lỗi:', error));
+                                        });
+                                    });
+
+                                    // Hàm cập nhật tổng tiền giỏ hàng
+                                    function updateTotalAmount() {
+                                        let total = 0;
+                                        document.querySelectorAll('.subtotal').forEach(subtotalEl => {
+                                            total += parseFloat(subtotalEl.textContent);
+                                        });
+                                        const totalAmountEl = document.getElementById('total-amount');
+                                        if (totalAmountEl) {
+                                            totalAmountEl.textContent = total.toFixed(2);
+                                        }
+                                    }
+                                });
+
+                            </script>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="cart-shiping-update-wrapper">
+                                    <div class="cart-shiping-update">
+                                        <a href="#">Continue Shopping</a>
+                                    </div>
+                                    <div class="cart-clear">
+                                        <button>Update Shopping Cart</button>
+                                        <a href="#">Clear Shopping Cart</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row">
+                        <div class="col-lg-4 col-md-12">
+                            <div class="grand-totall">
+                                <div class="title-wrap">
+                                    <h4 class="cart-bottom-title section-bg-gary-cart">Cart Total</h4>
+                                </div>
+                                <h5>Total products <span id="total-amount" th:text="${totalAmount}"></span></h5>
+                                <a th:href="@{/checkout}">Proceed to Checkout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- all js here -->
+<script th:src="@{/assets/js/vendor/jquery-1.12.4.min.js}"></script>
+<script th:src="@{/assets/js/popper.js}"></script>
+<script th:src="@{/assets/js/bootstrap.min.js}"></script>
+<script th:src="@{/assets/js/imagesloaded.pkgd.min.js}"></script>
+<script th:src="@{/assets/js/isotope.pkgd.min.js}"></script>
+<script th:src="@{/assets/js/ajax-mail.js}"></script>
+
+<script th:src="@{/assets/js/owl.carousel.min.js}"></script>
+
+<script th:src="@{/assets/js/plugins.js}"></script>
+<script th:src="@{/assets/js/main.js}"></script>
+</body>
+
+<!-- Mirrored from htmldemo.net/billy/billy/cart-page.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 06 Nov 2024 15:24:32 GMT -->
+</html>

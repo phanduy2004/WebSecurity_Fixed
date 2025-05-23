@@ -1,0 +1,464 @@
+<!doctype html>
+<html class="no-js" lang="zxx" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/layout-web.html}">
+<body>
+<div layout:fragment="content">
+    <div class="checkout-area pb-80 pt-100">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-9">
+                    <div class="checkout-wrapper">
+                        <div id="faq" class="panel-group">
+                            <!-- Orders Placed (Danh mục Đơn hàng đã đặt) -->
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h5 class="panel-title">
+                                        <span>1.</span> <a data-bs-toggle="collapse" data-bs-target="#placed-orders">
+                                        Orders Placed</a>
+                                    </h5>
+                                </div>
+                                <div id="placed-orders" class="panel-collapse collapse" data-bs-parent="#faq">
+                                    <div class="panel-body">
+                                        <!-- Lặp qua từng đơn hàng -->
+                                        <div th:each="order, orderStat : ${orders}">
+                                            <div class="order-review-wrapper">
+                                                <div class="order-review">
+                                                    <h4 th:text="'Invoice #' + ${order.orderId}">Invoice #1</h4>
+                                                    <div class="table-responsive">
+                                                        <table class="table">
+                                                            <thead>
+                                                            <tr>
+                                                                <th class="width-1">Product Name</th>
+                                                                <th class="width-2">Size</th>
+                                                                <th class="width-3">Qty</th>
+                                                                <th class="width-4">Price</th>
+                                                                <th class="width-5">Subtotal</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <!-- Lặp qua từng sản phẩm trong đơn hàng -->
+                                                            <tr th:each="orderDetail : ${order.orderDetails}">
+                                                                <td th:text="${orderDetail.product.name}">Fusce
+                                                                    aliquam
+                                                                </td>
+                                                                <td th:text="${orderDetail.product.productDetails[0].size}">
+                                                                    M
+                                                                </td>
+                                                                <td th:text="${orderDetail.quantity}">2</td>
+                                                                <td th:text="${orderDetail.product.productDetails[0].price}">
+                                                                    $236.00
+                                                                </td>
+                                                                <td th:text="${orderDetail.quantity * orderDetail.product.productDetails[0].price}">
+                                                                    $472.00
+                                                                </td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="panel-footer">
+                                                        <p><strong>Date Delivery:</strong> <span
+                                                                th:text="${order.date}">1267.00</span></p>
+                                                        <p><strong>Total Price:</strong> <span th:text="${order.total}">1267.00</span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h5 class="panel-title"><span>2.</span> <a data-bs-toggle="collapse"
+                                                                           data-bs-target="#payment-3">Order awaiting
+                                    confirmation</a></h5>
+                            </div>
+                            <div id="payment-3" class="panel-collapse collapse" data-bs-parent="#faq">
+                                <div class="panel-body">
+                                    <!-- Lặp qua các đơn hàng có trạng thái "Đang giao" -->
+                                    <div th:each="order : ${orders}">
+                                        <div th:if="${order.status == 'Pending'}" class="order-review-wrapper">
+                                            <div class="order-review">
+                                                <h4 th:text="'Invoice #' + ${order.orderId}">Invoice #1</h4>
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                        <tr>
+                                                            <th class="width-1">Product Name</th>
+                                                            <th class="width-2">Size</th>
+                                                            <th class="width-3">Qty</th>
+                                                            <th class="width-4">Price</th>
+                                                            <th class="width-5">Subtotal</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <!-- Lặp qua các sản phẩm trong đơn hàng -->
+                                                        <tr th:each="orderDetail : ${order.orderDetails}">
+                                                            <td th:text="${orderDetail.product.name}">Fusce aliquam</td>
+                                                            <td th:text="${orderDetail.product.productDetails[0].size}">
+                                                                M
+                                                            </td>
+                                                            <td th:text="${orderDetail.quantity}">2</td>
+                                                            <td th:text="${orderDetail.product.productDetails[0].price}">
+                                                                $236.00
+                                                            </td>
+                                                            <td th:text="${orderDetail.quantity * orderDetail.product.productDetails[0].price}">
+                                                                $472.00
+                                                            </td>
+                                                        </tr>
+                                                        <td colspan="5" class="product-remove">
+                                                            <button class="remove-item btn btn-danger"
+                                                                    th:data-order-id="${order.orderId}">
+                                                                <i class="fa fa-times"></i> Cancel Order
+                                                            </button>
+                                                        </td>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="panel-footer">
+                                                    <p><strong>Date Delivery:</strong> <span th:text="${order.date}">1267.00</span>
+                                                    </p>
+                                                    <p><strong>Total Price:</strong> <span th:text="${order.total}">1267.00</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    // Lắng nghe sự kiện nhấn nút "Hủy đơn hàng"
+                                    const removeButtons = document.querySelectorAll('.remove-item');
+
+                                    removeButtons.forEach(button => {
+                                        button.addEventListener('click', function (event) {
+                                            event.preventDefault();
+                                            const orderId = this.getAttribute('data-order-id');
+
+                                            if (!confirm('Are you sure you want to cancel this order?')) {
+                                                return;
+                                            }
+
+                                            // Gửi yêu cầu đến API hủy đơn hàng
+                                            fetch(`/myoders/cancel/${orderId}`, {
+                                                method: 'PUT', // Phương thức PUT (cập nhật)
+                                                headers: {
+                                                    'Content-Type': 'application/json'
+                                                }
+                                            })
+                                                .then(response => {
+                                                    if (!response.ok) {
+                                                        throw new Error('Failed to cancel order.');
+                                                    }
+                                                    return response.json();
+                                                })
+                                                .then(data => {
+                                                    if (data.success) {
+                                                        alert('Order has been cancelled successfully.');
+                                                        // Tải lại trang để cập nhật danh sách đơn hàng
+                                                        window.location.reload();
+                                                    }
+                                                })
+                                                .catch(error => {
+                                                    alert('Error cancelling the order: ' + error.message);
+                                                });
+                                        });
+                                    });
+                                });
+                            </script>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h5 class="panel-title">
+                                    <span>3.</span> <a data-bs-toggle="collapse" data-bs-target="#delivered-orders">
+                                    Orders Being Delivered</a>
+                                </h5>
+                            </div>
+                            <div id="delivered-orders" class="panel-collapse collapse" data-bs-parent="#faq">
+                                <div class="panel-body">
+                                    <!-- Lặp qua các đơn hàng có trạng thái "Đang giao" -->
+                                    <div th:each="order : ${orders}">
+                                        <div th:if="${order.status == 'Shipping'}" class="order-review-wrapper">
+                                            <div class="order-review">
+                                                <h4 th:text="'Invoice #' + ${order.orderId}">Invoice #1</h4>
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                        <tr>
+                                                            <th class="width-1">Product Name</th>
+                                                            <th class="width-2">Size</th>
+                                                            <th class="width-3">Qty</th>
+                                                            <th class="width-4">Price</th>
+                                                            <th class="width-5">Subtotal</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <!-- Lặp qua các sản phẩm trong đơn hàng -->
+                                                        <tr th:each="orderDetail : ${order.orderDetails}">
+                                                            <td th:text="${orderDetail.product.name}">Fusce aliquam</td>
+                                                            <td th:text="${orderDetail.product.productDetails[0].size}">
+                                                                M
+                                                            </td>
+                                                            <td th:text="${orderDetail.quantity}">2</td>
+                                                            <td th:text="${orderDetail.product.productDetails[0].price}">
+                                                                $236.00
+                                                            </td>
+                                                            <td th:text="${orderDetail.quantity * orderDetail.product.productDetails[0].price}">
+                                                                $472.00
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="panel-footer">
+                                                    <p><strong>Date Delivery:</strong> <span th:text="${order.date}">1267.00</span>
+                                                    </p>
+                                                    <p><strong>Total Price:</strong> <span th:text="${order.total}">1267.00</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Orders Being Delivered (Danh mục Đơn hàng đang giao) -->
+                        <!-- Orders Being Delivered (Danh mục Đơn hàng đang giao) -->
+
+                        <!-- Orders Canceled (Danh mục Đơn hàng đã hủy) -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h5 class="panel-title">
+                                    <span>4.</span> <a data-bs-toggle="collapse" data-bs-target="#canceled-orders">
+                                    Orders Canceled</a>
+                                </h5>
+                            </div>
+                            <div id="canceled-orders" class="panel-collapse collapse" data-bs-parent="#faq">
+                                <div class="panel-body">
+                                    <!-- Lặp qua các đơn hàng có trạng thái "Đang giao" -->
+                                    <div th:each="order : ${orders}">
+                                        <div th:if="${order.status == 'Canceled'}" class="order-review-wrapper">
+                                            <div class="order-review">
+                                                <h4 th:text="'Invoice #' + ${order.orderId}">Invoice #1</h4>
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                        <tr>
+                                                            <th class="width-1">Product Name</th>
+                                                            <th class="width-2">Size</th>
+                                                            <th class="width-3">Qty</th>
+                                                            <th class="width-4">Price</th>
+                                                            <th class="width-5">Subtotal</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <!-- Lặp qua các sản phẩm trong đơn hàng -->
+                                                        <tr th:each="orderDetail : ${order.orderDetails}">
+                                                            <td th:text="${orderDetail.product.name}">Fusce aliquam</td>
+                                                            <td th:text="${orderDetail.product.productDetails[0].size}">
+                                                                M
+                                                            </td>
+                                                            <td th:text="${orderDetail.quantity}">2</td>
+                                                            <td th:text="${orderDetail.product.productDetails[0].price}">
+                                                                $236.00
+                                                            </td>
+                                                            <td th:text="${orderDetail.quantity * orderDetail.product.productDetails[0].price}">
+                                                                $472.00
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="panel-footer">
+                                                    <p><strong>Date Delivery:</strong> <span th:text="${order.date}">1267.00</span>
+                                                    </p>
+                                                    <p><strong>Total Price:</strong> <span th:text="${order.total}">1267.00</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Orders Completed (Danh mục Đơn hàng đã hoàn thành) -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h5 class="panel-title">
+                                    <span>5.</span> <a data-bs-toggle="collapse" data-bs-target="#completed-orders">
+                                    Orders Completed</a>
+                                </h5>
+                            </div>
+                            <div id="completed-orders" class="panel-collapse collapse" data-bs-parent="#faq">
+                                <div class="panel-body">
+                                    <!-- Lặp qua các đơn hàng có trạng thái "Đang giao" -->
+                                    <div th:each="order : ${orders}">
+                                        <div th:if="${order.status == 'Delivered'}" class="order-review-wrapper">
+                                            <div class="order-review">
+                                                <h4 th:text="'Invoice #' + ${order.orderId}">Invoice #1</h4>
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                        <tr>
+                                                            <th class="width-1">Product Name</th>
+                                                            <th class="width-2">Size</th>
+                                                            <th class="width-3">Qty</th>
+                                                            <th class="width-4">Price</th>
+                                                            <th class="width-5">Subtotal</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <!-- Lặp qua các sản phẩm trong đơn hàng -->
+                                                        <tr th:each="orderDetail : ${order.orderDetails}">
+                                                            <td th:text="${orderDetail.product.name}">Fusce aliquam</td>
+                                                            <td th:text="${orderDetail.product.productDetails[0].size}">
+                                                                M
+                                                            </td>
+                                                            <td th:text="${orderDetail.quantity}">2</td>
+                                                            <td th:text="${orderDetail.product.productDetails[0].price}">
+                                                                $236.00
+                                                            </td>
+                                                            <td th:text="${orderDetail.quantity * orderDetail.product.productDetails[0].price}">
+                                                                $472.00
+                                                            </td>
+                                                        </tr>
+                                                        <td colspan="5" class="product-return">
+                                                            <button class="return-item btn btn-danger"
+                                                                    th:data-order-id="${order.orderId}">
+                                                                <i class="fa fa-times"></i> Return Order
+                                                            </button>
+                                                        </td>
+                                                        </tbody>
+                                                    </table>
+                                                    <script>
+                                                        document.addEventListener('DOMContentLoaded', function () {
+                                                            // Lắng nghe sự kiện nhấn nút "Hủy đơn hàng"
+                                                            const removeButtons = document.querySelectorAll('.return-item');
+
+                                                            removeButtons.forEach(button => {
+                                                                button.addEventListener('click', function (event) {
+                                                                    event.preventDefault();
+                                                                    const orderId = this.getAttribute('data-order-id');
+
+                                                                    if (!confirm('Are you sure you want to cancel this order?')) {
+                                                                        return;
+                                                                    }
+
+                                                                    // Gửi yêu cầu đến API hủy đơn hàng
+                                                                    fetch(`/myoders/return/${orderId}`, {
+                                                                        method: 'PUT', // Phương thức PUT (cập nhật)
+                                                                        headers: {
+                                                                            'Content-Type': 'application/json'
+                                                                        }
+                                                                    })
+                                                                        .then(response => {
+                                                                            if (!response.ok) {
+                                                                                throw new Error('Failed to cancel order.');
+                                                                            }
+                                                                            return response.json();
+                                                                        })
+                                                                        .then(data => {
+                                                                            if (data.success) {
+                                                                                alert('Order has been cancelled successfully.');
+                                                                                // Tải lại trang để cập nhật danh sách đơn hàng
+                                                                                window.location.reload();
+                                                                            }
+                                                                        })
+                                                                        .catch(error => {
+                                                                            alert('Error cancelling the order: ' + error.message);
+                                                                        });
+                                                                });
+                                                            });
+                                                        });
+                                                    </script>
+                                                </div>
+                                                <div class="panel-footer">
+                                                    <p><strong>Date Delivery:</strong> <span th:text="${order.date}">1267.00</span>
+                                                    </p>
+                                                    <p><strong>Total Price:</strong> <span th:text="${order.total}">1267.00</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h5 class="panel-title">
+                                    <span>6.</span> <a data-bs-toggle="collapse" data-bs-target="#return-orders">
+                                    Orders Return</a>
+                                </h5>
+                            </div>
+                            <div id="return-orders" class="panel-collapse collapse" data-bs-parent="#faq">
+                                <div class="panel-body">
+                                    <!-- Lặp qua các đơn hàng có trạng thái "Đang giao" -->
+                                    <div th:each="order : ${orders}">
+                                        <div th:if="${order.status == 'Return'}" class="order-review-wrapper">
+                                            <div class="order-review">
+                                                <h4 th:text="'Invoice #' + ${order.orderId}">Invoice #1</h4>
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                        <tr>
+                                                            <th class="width-1">Product Name</th>
+                                                            <th class="width-2">Size</th>
+                                                            <th class="width-3">Qty</th>
+                                                            <th class="width-4">Price</th>
+                                                            <th class="width-5">Subtotal</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <!-- Lặp qua các sản phẩm trong đơn hàng -->
+                                                        <tr th:each="orderDetail : ${order.orderDetails}">
+                                                            <td th:text="${orderDetail.product.name}">Fusce aliquam</td>
+                                                            <td th:text="${orderDetail.product.productDetails[0].size}">
+                                                                M
+                                                            </td>
+                                                            <td th:text="${orderDetail.quantity}">2</td>
+                                                            <td th:text="${orderDetail.product.productDetails[0].price}">
+                                                                $236.00
+                                                            </td>
+                                                            <td th:text="${orderDetail.quantity * orderDetail.product.productDetails[0].price}">
+                                                                $472.00
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="panel-footer">
+                                                    <p><strong>Date Delivery:</strong> <span th:text="${order.date}">1267.00</span>
+                                                    </p>
+                                                    <p><strong>Total Price:</strong> <span th:text="${order.total}">1267.00</span>
+                                                    </p>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/assets/js/vendor/jquery-1.12.4.min.js}"></script>
+<script th:src="@{/assets/js/popper.js}"></script>
+<script th:src="@{/assets/js/bootstrap.min.js}"></script>
+<script th:src="@{/assets/js/imagesloaded.pkgd.min.js}"></script>
+<script th:src="@{/assets/js/isotope.pkgd.min.js}"></script>
+<script th:src="@{/assets/js/ajax-mail.js}"></script>
+<script th:src="@{/assets/js/owl.carousel.min.js}"></script>
+<script th:src="@{/assets/js/plugins.js}"></script>
+<script th:src="@{/assets/js/main.js}"></script>
+</body>
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/layout-web.html}">
+
+<body>
+
+<!--Thêm dòng này vào-->
+<section layout:fragment="content" class="user">
+    <div id="alertBox" style="display: none; margin-top: 10px;" class="alert"></div>
+    <div class="breadcrumb-area gray-bg">
+        <div class="container">
+            <div class="breadcrumb-content">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                </ul>
+                <li class="active">My Account</li>
+            </div>
+        </div>
+    </div>
+    <!-- my account start -->
+    <div class="myaccount-area pb-80 pt-100">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="ml-auto mr-auto col-lg-9">
+                    <div class="checkout-wrapper">
+                        <div id="faq" class="panel-group">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h5 class="panel-title"><span>1</span> <a data-bs-toggle="collapse"
+                                                                              href="#my-account-1">Edit your account
+                                        information </a></h5>
+                                </div>
+                                <div id="my-account-1" class="panel-collapse collapse show" data-bs-parent="#faq">
+                                    <div class="panel-body">
+                                        <div class="billing-information-wrapper">
+                                            <div class="account-info-wrapper">
+                                                <h4>My Account Information</h4>
+                                                <h5>Your Personal Details</h5>
+                                            </div>
+                                            <form id="updateForm" action="/auth/updateinfor" method="POST">
+                                                <div class="row">
+                                                    <input type="hidden" name="userId" th:value="${user.userId}">
+                                                    <div class="col-lg-6 col-md-6">
+                                                        <div class="billing-info">
+                                                            <label>Full Name</label>
+                                                            <input type="text" name="fullName"
+                                                                   th:value="${user.fullName}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6 col-md-6">
+                                                        <div class="billing-info">
+                                                            <label>Username</label>
+                                                            <input type="text" name="userName"
+                                                                   th:value="${user.username}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6 col-md-6">
+                                                        <div class="billing-info">
+                                                            <label>Email Address</label>
+                                                            <input type="email" name="email" th:value="${user.email}"
+                                                                   readonly>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6 col-md-6">
+                                                        <div class="billing-info">
+                                                            <label>Telephone</label>
+                                                            <input type="text" name="phone" th:value="${user.phone}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12 col-md-12">
+                                                        <div class="billing-info">
+                                                            <label>Address</label>
+                                                            <input type="text" name="address" th:value="${user.address}"
+                                                                   readonly>
+                                                        </div>
+                                                    </div>
+                                                    <div class="billing-back-btn">
+                                                        <div class="billing-back">
+                                                            <a href="#"><i class="ion-arrow-up-c"></i> back</a>
+                                                        </div>
+                                                        <div class="billing-btn">
+                                                            <button class="btn btn-primary" type="submit">
+                                                                <i class="fas fa-arrow-right"></i>
+                                                                <span th:text="${user.isEdit ? 'Update' : 'Save'}"></span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <form action="/auth/enter-new-password" method="POST">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h5 class="panel-title">
+                                        <span>2</span>
+                                        <!-- Sử dụng JavaScript để chuyển hướng khi nhấn vào liên kết -->
+                                        <a href="#" onclick="this.closest('form').submit();">Change your password</a>
+                                    </h5>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h5 class="panel-title"><span>3</span> <a data-bs-toggle="collapse"
+                                                                          href="#my-account-3">Modify your address book
+                                    entries </a></h5>
+                            </div>
+                            <div id="my-account-3" class="panel-collapse collapse" data-bs-parent="#faq">
+                                <div class="panel-body">
+                                    <div class="billing-information-wrapper">
+                                        <div class="account-info-wrapper">
+                                            <h4>Address Book Entries</h4>
+                                        </div>
+                                        <div class="billing-information-wrapper">
+                                            <form id="updateAddressForm" action="/auth/updateAddress" method="POST">
+                                                <div class="row">
+                                                    <!-- Số nhà/Đường -->
+                                                    <div class="col-lg-6 col-md-6">
+                                                        <div class="billing-info">
+                                                            <label>Số nhà/Đường</label>
+                                                            <input type="text" name="homeaddress"
+                                                                   th:value="${homeaddress}" id="homeaddress"
+                                                                   oninput="updateFullAddress()">
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Xã/Phường -->
+                                                    <div class="col-lg-6 col-md-6">
+                                                        <div class="billing-info">
+                                                            <label>Xã/Phường</label>
+                                                            <input type="text" name="town" th:value="${town}" id="town"
+                                                                   oninput="updateFullAddress()">
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Quận/Huyện -->
+                                                    <div class="col-lg-6 col-md-6">
+                                                        <div class="billing-info">
+                                                            <label>Quận/Huyện</label>
+                                                            <input type="text" name="district" th:value="${district}"
+                                                                   id="district" oninput="updateFullAddress()">
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Tỉnh/Thành phố -->
+                                                    <div class="col-lg-6 col-md-6">
+                                                        <div class="billing-info">
+                                                            <label>Tỉnh/Thành phố</label>
+                                                            <input type="text" name="city" th:value="${city}" id="city"
+                                                                   oninput="updateFullAddress()">
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Địa chỉ chi tiết -->
+                                                    <div class="col-lg-12 col-md-12">
+                                                        <div class="billing-info">
+                                                            <label>Địa chỉ chi tiết</label>
+                                                            <input type="text" name="address" th:value="${user.address}"
+                                                                   id="fullAddress" readonly>
+                                                        </div>
+                                                    </div>
+                                                    <div class="billing-back-btn">
+                                                        <div class="billing-back">
+                                                            <a href="#"><i class="ion-arrow-up-c"></i> back</a>
+                                                        </div>
+                                                        <div class="billing-btn">
+                                                            <button type="submit">Update</button>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h5 class="panel-title"><span>4</span> <a data-bs-toggle="collapse" href="#my-account-4">View your product history</a></h5>
+                            </div>
+                            <div id="my-account-4" class="panel-collapse collapse" data-bs-parent="#faq">
+                                <div class="panel-body">
+                                    <!-- history-area start -->
+                                    <div class="history-main-area pt-95 pb-100">
+                                        <div class="container">
+                                            <h3 class="page-title">Your viewed product history</h3>
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                                                    <div class="table-content table-responsive history">
+                                                        <table class="table table-bordered">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>Image</th>
+                                                                <th>Product Name</th>
+                                                                <th>Date Viewed</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <!-- Loop through the viewed products -->
+                                                            <tr th:each="item : ${viewedItems}"
+                                                                th:id="'view-item-' + ${item.user.userId} + '-' + ${item.product.proId}">
+
+                                                                <td class="product-thumbnail">
+                                                                    <a href="#" th:href="@{${item.product.imageLink}}">
+                                                                        <img th:src="@{${item.product.imageLink}}" alt="Product Image" width="100">
+                                                                    </a>
+                                                                </td>
+                                                                <td class="product-name">
+                                                                    <a href="#" th:href="@{/web/product/detail/{id}(id=${item.product.proId})}" th:text="${item.product.name}"></a>
+                                                                </td>
+                                                                <td class="product-date">
+                                                                    <span th:text="${item.date}"></span>
+                                                                </td>
+                                                                <!-- Thêm cột Action để đi đến trang chi tiết sản phẩm -->
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- history-area end -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // This function will be called every time the user types in any of the address fields
+        function updateFullAddress() {
+            var homeaddress = document.getElementById('homeaddress').value.trim();
+            var town = document.getElementById('town').value.trim();
+            var district = document.getElementById('district').value.trim();
+            var city = document.getElementById('city').value.trim();
+
+            // Concatenate the parts to form the full address
+            var fullAddress = homeaddress;
+            if (town) fullAddress += ", " + town;
+            if (district) fullAddress += ", " + district;
+            if (city) fullAddress += ", " + city;
+
+            // Update the "Địa chỉ chi tiết" input field with the concatenated address
+            document.getElementById('fullAddress').value = fullAddress;
+        }
+    </script>
+
+    <script>
+        document.getElementById("updateForm").addEventListener("submit", function (event) {
+            event.preventDefault(); // Ngăn gửi form theo cách thông thường
+
+            const form = event.target;
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: "POST",
+                body: formData,
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        return response.json().then((data) => {
+                            throw new Error(data.message || "Có lỗi xảy ra!");
+                        });
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    if (data.status === "success") {
+                        // Hiển thị thông báo thành công
+                        showAlert(data.message, "success");
+                    }
+                })
+                .catch((error) => {
+                    // Hiển thị thông báo lỗi
+                    showAlert(error.message, "error");
+                });
+        });
+
+        document.getElementById("updateAddressForm").addEventListener("submit", function (event) {
+            event.preventDefault(); // Ngăn gửi form theo cách thông thường
+
+            const form = event.target;
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: "POST",
+                body: formData,
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        return response.json().then((data) => {
+                            throw new Error(data.message || "Có lỗi xảy ra!");
+                        });
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    if (data.status === "success") {
+                        // Hiển thị thông báo thành công
+                        showAlert(data.message, "success");
+                    }
+                })
+                .catch((error) => {
+                    // Hiển thị thông báo lỗi
+                    showAlert(error.message, "error");
+                });
+        });
+
+        function showAlert(message, type) {
+            const alertBox = document.getElementById("alertBox");
+            alertBox.textContent = message;
+            alertBox.className = `alert alert-${type}`; // Thêm class tương ứng với loại thông báo
+            alertBox.style.display = "block"; // Hiển thị alert
+            setTimeout(() => {
+                alertBox.style.display = "none"; // Tự động ẩn sau 5 giây
+            }, 10000);
+        }
+    </script>
+
+
+</section>
+
+</body>
+
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" class="light scroll-smooth group" data-layout="vertical" data-sidebar="dark" data-sidebar-size="lg" data-mode="dark" data-topbar="dark" data-skin="default" data-navbar="sticky" data-content="fluid" dir="ltr"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{manager/layout-admin.html}">
+
+
+<body class="text-base bg-body-bg text-body font-public dark:text-zink-100 dark:bg-zink-800 group-data-[skin=bordered]:bg-body-bordered group-data-[skin=bordered]:dark:bg-zink-700">
+<section layout:fragment="content">
+    <div class="group-data-[sidebar-size=lg]:ltr:md:ml-vertical-menu group-data-[sidebar-size=lg]:rtl:md:mr-vertical-menu group-data-[sidebar-size=md]:ltr:ml-vertical-menu-md group-data-[sidebar-size=md]:rtl:mr-vertical-menu-md group-data-[sidebar-size=sm]:ltr:ml-vertical-menu-sm group-data-[sidebar-size=sm]:rtl:mr-vertical-menu-sm pt-[calc(theme('spacing.header')_*_1)] pb-[calc(theme('spacing.header')_*_0.8)] px-4 group-data-[navbar=bordered]:pt-[calc(theme('spacing.header')_*_1.3)] group-data-[navbar=hidden]:pt-0 group-data-[layout=horizontal]:mx-auto group-data-[layout=horizontal]:max-w-screen-2xl group-data-[layout=horizontal]:px-0 group-data-[layout=horizontal]:group-data-[sidebar-size=lg]:ltr:md:ml-auto group-data-[layout=horizontal]:group-data-[sidebar-size=lg]:rtl:md:mr-auto group-data-[layout=horizontal]:md:pt-[calc(theme('spacing.header')_*_1.6)] group-data-[layout=horizontal]:px-3 group-data-[layout=horizontal]:group-data-[navbar=hidden]:pt-[calc(theme('spacing.header')_*_0.9)]">
+        <div class="container-fluid group-data-[content=boxed]:max-w-boxed mx-auto">
+
+            <div class="flex flex-col gap-2 py-4 md:flex-row md:items-center print:hidden">
+                <div class="grow">
+                    <h5 class="text-16">Add New</h5>
+                </div>
+                <ul class="flex items-center gap-2 text-sm font-normal shrink-0">
+                    <li class="relative before:content-['\ea54'] before:font-remix ltr:before:-right-1 rtl:before:-left-1  before:absolute before:text-[18px] before:-top-[3px] ltr:pr-4 rtl:pl-4 before:text-slate-400 dark:text-zink-200">
+                        <a href="#!" class="text-slate-400 dark:text-zink-200">Product</a>
+                    </li>
+                    <li class="text-slate-700 dark:text-zink-100">
+                        Add New
+                    </li>
+                </ul>
+            </div>
+            <div class="grid grid-cols-1 xl:grid-cols-12 gap-x-5">
+                <div class="xl:col-span-9">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="mb-4 text-15">Create Product</h6>
+                            <form th:action="${isEdit ? '/manager/product/edit/save' : '/manager/product/add/save'}" method="post">
+                                <div class="grid grid-cols-1 gap-5 lg:grid-cols-2 xl:grid-cols-12">
+                                    <input type="hidden" th:if="${isEdit}" th:name="id" th:value="${product.proId}" />
+                                    <!-- Product Title -->
+                                    <div class="xl:col-span-6">
+                                        <label for="productNameInput" class="inline-block mb-2 text-base font-medium">Product Title</label>
+                                        <input type="text" id="productNameInput" name="name"
+                                               th:value="${product.name}"
+                                               class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 placeholder:text-slate-400 dark:placeholder:text-zink-200"
+                                               placeholder="Product title" required maxlength="20">
+                                    </div>
+                                    <!-- Image Upload Options -->
+                                    <div class="lg:col-span-2 xl:col-span-12">
+                                        <label class="inline-block mb-2 text-base font-medium">Product Image</label>
+                                        <div>
+                                            <label class="inline-block mb-2 text-sm font-medium">Upload from Computer</label>
+                                            <input type="file" name="imageFile"
+                                                   class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500"
+                                                   accept="image/*">
+                                        </div>
+
+                                        <div class="mt-4">
+                                            <label class="inline-block mb-2 text-sm font-medium">Or Enter Image URL</label>
+                                            <input type="url" name="imageUrl"
+                                                   th:value="${product.imageLink}"
+                                                   class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 placeholder:text-slate-400 dark:placeholder:text-zink-200"
+                                                   placeholder="https://example.com/image.jpg">
+                                        </div>
+                                    </div>
+                                    <!-- Description -->
+                                    <div class="lg:col-span-2 xl:col-span-12">
+                                        <label for="productDescription" class="inline-block mb-2 text-base font-medium">Description</label>
+                                        <textarea name="description"
+                                                  th:text="${product.description}"
+                                                  class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 placeholder:text-slate-400 dark:placeholder:text-zink-200"
+                                                  id="productDescription" placeholder="Enter Description" rows="5"></textarea>
+                                    </div>
+                                    <div class="xl:col-span-6">
+                                        <label for="categoryId">Category:</label>
+                                        <select id="categoryId" name="categoryId" required>
+                                            <option value="">Select Category</option>
+                                            <th:block th:each="category : ${categories}">
+                                                <option th:value="${category.cateId}" th:text="${category.name}"></option>
+                                            </th:block>
+                                        </select>
+                                    </div>
+                                    <div class="xl:col-span-6">
+                                        <label for="promotionId">Promotion:</label>
+                                        <select id="promotionId" name="promotionId">
+                                            <option value="">No Promotion</option>
+                                            <th:block th:each="promotion : ${promotions}">
+                                                <option th:value="${promotion.promotionId}" th:text="${promotion.name}"></option>
+                                            </th:block>
+                                        </select>
+                                    </div>
+                                </div><!--end grid-->
+
+                                <!-- Buttons -->
+                                <div class="flex justify-end gap-2 mt-4">
+                                    <button type="reset"
+                                            class="text-red-500 bg-white btn hover:text-red-500 hover:bg-red-100 focus:text-red-500 focus:bg-red-100 active:text-red-500 active:bg-red-100 dark:bg-zink-700 dark:hover:bg-red-500/10">
+                                        Reset
+                                    </button>
+                                    <button type="submit"
+                                            class="text-white btn bg-custom-500 border-custom-500 hover:text-white hover:bg-custom-600 focus:text-white focus:bg-custom-600 focus:border-custom-600 focus:ring focus:ring-custom-100 active:text-white active:bg-custom-600">
+                                        <span th:text="${isEdit} ? 'Update Product' : 'Create Product'">Create Product</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div><!--end card-->
+                </div><!--end col-->
+            </div><!--end grid-->
+
+        </div>
+        <!-- container-fluid -->
+    </div>
+</section>
+
+
+</body>
+
+
+<!-- Mirrored from themesdesign.in/tailwick/html-dark/apps-ecommerce-promotion-create.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 15 Nov 2024 15:40:27 GMT -->
+</html>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<body>
+<div th:fragment="header">
+	<header class="header-area">
+		<div class="header-top black-bg">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-4 col-md-4 col-12 col-sm-4">
+						<div class="welcome-area">
+							<p>Default welcome msg! </p>
+						</div>
+					</div>
+					<div class="col-lg-8 col-md-8 col-12 col-sm-8">
+						<div class="account-curr-lang-wrap f-right">
+							<ul>
+								<li class="top-hover"><a th:href="@{#}">Language: (ENG) <i class="ion-chevron-down"></i></a>
+									<ul>
+										<li><a th:href="@{#}">Bangla </a></li>
+										<li><a th:href="@{#}">Arabic</a></li>
+										<li><a th:href="@{#}">Hindi </a></li>
+										<li><a th:href="@{#}">Spanish</a></li>
+									</ul>
+								</li>
+								<li class="top-hover"><a th:href="@{#}">Currency: (USD) <i class="ion-chevron-down"></i></a>
+									<ul>
+										<li><a th:href="@{#}">Taka (BDT)</a></li>
+										<li><a th:href="@{#}">Riyal (SAR)</a></li>
+										<li><a th:href="@{#}">Rupee (INR)</a></li>
+										<li><a th:href="@{#}">Dirham (AED)</a></li>
+									</ul>
+								</li>
+								<li class="top-hover"><a th:href="@{/}">Setting  <i class="ion-chevron-down"></i></a>
+									<ul>
+										<li><a sec:authorize="hasAuthority('ADMIN')" th:href="@{/admin}">Admin</a></li>
+										<li><a th:href="@{/auth/login}">Login</a></li>
+										<li><a th:href="@{/auth/register}">Register</a></li>
+										<li><a th:href="@{/myoders}">My Orders</a></li>
+										<li><a th:href="@{/home/myaccount}">my account</a></li>
+										<li><a sec:authorize="hasAuthority('MANAGER')" th:href="@{/manager}">My Store</a></li>
+										<li><a sec:authorize="hasAuthority('SHIPPER')" th:href="@{/shipper/listShip}">Shipper</a></li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="header-middle">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-3 col-md-4 col-12 col-sm-4">
+						<div class="logo">
+							<a th:href="@{/}">
+								<img alt="" th:src="@{/assets/img/logo/logo.png}">
+							</a>
+						</div>
+					</div>
+
+					<div class="col-lg-9 col-md-8 col-12 col-sm-8">
+						<div class="header-middle-right f-right">
+							<div class="header-login">
+								<!-- Kiểm tra xem người dùng chưa đăng nhập -->
+								<div sec:authorize="isAnonymous()">
+									<a th:href="@{/auth/login}" class="nav-link">
+										<div class="header-icon-style">
+											<i class="icon-user icons"></i>
+										</div>
+										<div class="login-text-content">
+											<p>Register <br> or <span>Sign in</span></p>
+										</div>
+									</a>
+								</div>
+								<!-- Hiển thị khi người dùng đã đăng nhập -->
+								<div sec:authorize="isAuthenticated()" class="nav-item dropdown-center" style="margin-right: 20px;">
+									<a th:href="@{/home/myaccount}" class="nav-link">
+										<div class="header-icon-style">
+											<i class="icon-user icons"></i>
+										</div>
+										<div class="login-text-content">
+											<p>Hello, <span th:text="${#authentication.name}"></span> <br>
+												<span>My Account</span>
+											</p>
+										</div>
+									</a>
+									<a th:href="@{/auth/logout}" class="logout-link" style="margin-left: 10px;">
+										<span>Logout</span>
+									</a>
+								</div>
+							</div>
+
+
+							<div class="header-wishlist">
+								<a th:href="@{/user-wishList}">
+									<div class="header-icon-style">
+										<i class="icon-heart icons"></i>
+									</div>
+									<div class="wishlist-text">
+										<p>Your <br> <span>Wishlist</span></p>
+									</div>
+								</a>
+							</div>
+							<div class="header-wishlist">
+								<a th:href="@{/user-cart}">
+									<div class="header-icon-style">
+										<i class="icon-handbag icons"></i>
+										<span class="count-style" th:text="${cartItems != null ? cartItems.size() : 0}">02</span>
+									</div>
+									<div class="cart-text">
+										<span class="digit">My Cart</span>
+										<span class="cart-digit-bold" th:text="${totalAmount}">$209.00</span>
+									</div>
+								</a>
+
+								<!--<div class="shopping-cart-content">
+									<ul>
+										<li class="single-shopping-cart">
+											<div class="shopping-cart-img">
+												<a th:href="@{/cart}"><img alt="" th:src="@{/assets/img/cart/cart-1.jpg}"></a>
+											</div>
+											<div class="shopping-cart-title">
+												<h4><a th:href="@{/product-details}">Phantom Remote</a></h4>
+												<h6>Qty: 02</h6>
+												<span>$260.00</span>
+											</div>
+											<div class="shopping-cart-delete">
+												<a th:href="@{/remove-from-cart}"><i class="ion ion-close"></i></a>
+											</div>
+										</li>
+										<li class="single-shopping-cart">
+											<div class="shopping-cart-img">
+												<a th:href="@{/cart}"><img alt="" th:src="@{/assets/img/cart/cart-2.jpg}"></a>
+											</div>
+											<div class="shopping-cart-title">
+												<h4><a th:href="@{/product-details}">Phantom Remote</a></h4>
+												<h6>Qty: 02</h6>
+												<span>$260.00</span>
+											</div>
+											<div class="shopping-cart-delete">
+												<a th:href="@{/remove-from-cart}"><i class="ion ion-close"></i></a>
+											</div>
+										</li>
+									</ul>
+									<div class="shopping-cart-total">
+										<h4>Shipping : <span>$20.00</span></h4>
+										<h4>Total : <span class="shop-total">$260.00</span></h4>
+									</div>
+									<div class="shopping-cart-btn">
+										<a th:href="@{/cart}">View Cart</a>
+										<a th:href="@{/checkout}">Checkout</a>
+									</div>
+								</div>-->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="header-bottom transparent-bar black-bg">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12 col-md-12 col-12">
+						<div class="main-menu">
+							<nav>
+								<ul>
+									<li><a th:href="@{/}">home</a></li>
+									<li><a th:href="@{/about}">about</a></li>
+									<li class="top-hover"><a th:href="@{/web/product}">Categories <i class="ion-chevron-down"></i></a>
+										<ul class="submenu">
+											<li>
+												<ul id="category-list">
+													<li class="mega-menu-title"><a href="#">Categories</a></li>
+													<!-- Các danh mục sẽ được thêm vào đây bằng JavaScript -->
+												</ul>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</nav>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- mobile-menu-area-start -->
+		<div class="mobile-menu-area">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="mobile-menu">
+							<nav id="mobile-menu-active">
+								<ul class="menu-overflow" id="nav">
+									<li><a th:href="@{/}">home</a>
+									<li><a th:href="@{#}">pages</a>
+										<ul>
+											<li><a th:href="@{/about}">about us </a></li>
+											<li><a th:href="@{shop.html}">shop Grid</a></li>
+											<li><a th:href="@{shop-list.html}">shop list</a></li>
+											<li><a th:href="@{product-details.html}">product details</a></li>
+											<li><a th:href="@{cart-page.html}">cart page</a></li>
+											<li><a th:href="@{checkout.html}">checkout</a></li>
+											<li><a th:href="@{wishlist.html}">wishlist</a></li>
+											<li><a th:href="@{my-account.html}">my account</a></li>
+											<li><a th:href="@{login-register.html}">login / register</a></li>
+											<li><a th:href="@{contact.html}">contact</a></li>
+											<li><a th:href="@{testimonial.html}">Testimonials</a></li>
+										</ul>
+									</li>
+									<li class="top-hover"><a th:href="@{/web/product}">Categories <i class="ion-chevron-down"></i></a>
+										<ul class="submenu">
+											<li>
+												<ul id="category-list1">
+													<li class="mega-menu-title"><a href="#">Categories</a></li>
+													<!-- Các danh mục sẽ được thêm vào đây bằng JavaScript -->
+												</ul>
+											</li>
+										</ul>
+									</li>
+									<li><a th:href="@{blog-rightsidebar.html}">blog</a>
+										<ul>
+											<li><a th:href="@{blog.html}">Blog No sidebar</a></li>
+											<li><a th:href="@{blog-rightsidebar.html}">Blog sidebar</a></li>
+											<li><a th:href="@{blog-details.html}">Blog details</a></li>
+											<li><a th:href="@{blog-details-gallery.html}">Blog details gallery</a></li>
+											<li><a th:href="@{blog-details-video.html}">Blog details video</a></li>
+										</ul>
+									</li>
+									<li><a th:href="@{contact.html}">contact us</a></li>
+									<li><a th:href="@{shop.html}">burger</a></li>
+								</ul>
+							</nav>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			document.addEventListener("DOMContentLoaded", function () {
+				fetch('/api/categories') // Đường dẫn tới API trả về danh sách danh mục
+						.then(response => {
+							if (!response.ok) {
+								throw new Error('Network response was not ok');
+							}
+							return response.json();
+						})
+						.then(data => {
+							console.log(data);  // In dữ liệu trả về từ API ra console
+							const categoryList = document.getElementById('category-list');
+
+							// Kiểm tra nếu dữ liệu có tồn tại và không rỗng
+							if (data && Array.isArray(data)) {
+								data.forEach(category => {
+									// Tạo phần tử li cho mỗi danh mục
+									const li = document.createElement('li');
+									const a = document.createElement('a');
+
+									// Đặt liên kết href và nội dung
+									a.href = `/web/category/${category.cateId}`;  // Giả sử `cateId` là ID của danh mục
+									a.textContent = category.name;  // Giả sử `name` là tên của danh mục
+
+									// Thêm thẻ <a> vào <li> và sau đó thêm <li> vào <ul id="category-list">
+									li.appendChild(a);
+									categoryList.appendChild(li);
+								});
+							} else {
+								const li = document.createElement('li');
+								li.textContent = 'No categories available';
+								categoryList.appendChild(li);
+							}
+						})
+						.catch(error => {
+							console.error('Error loading categories:', error);
+							const categoryList = document.getElementById('category-list');
+							const li = document.createElement('li');
+							li.textContent = 'Failed to load categories';
+							categoryList.appendChild(li);
+						});
+			});
+		</script>
+
+		<!-- mobile-menu-area-end -->
+	</header>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,403 @@
+<!doctype html>
+<html class="no-js" lang="zxx" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/layout-web.html}">
+
+<body>
+<div layout:fragment="content">
+    <div class="breadcrumb-area gray-bg">
+        <div class="container">
+            <div class="breadcrumb-content">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li class="active">Product Details</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="product-details pt-100 pb-90">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-12">
+                    <div class="product-details-img">
+                        <img class="zoompro" th:src="@{${prd[0].imageLink}}" data-zoom-image="${prd[0].imageLink}"
+                             alt="zoom"/>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-12">
+                    <div class="product-details-content">
+                        <h4 th:text="${prd[0].name}">Glory of the Snow</h4>
+                        <div class="rating-review">
+                            <div class="pro-dec-rating"></div>
+                            <div class="pro-dec-review"></div>
+                        </div>
+
+                        <span id="productPrice" th:text="${prd[0].price}"> $260.00</span>
+                        <div class="in-stock"></div>
+                        <p th:text="${prd[0].description}">
+                            Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod
+                            mazim placerat facer possim assum.
+                        </p>
+                        <div class="pro-dec-size">
+                            <p>Select Size:</p>
+                            <div class="size-options">
+                                <label>
+                                    <input type="radio" name="drinkSize" value="S" checked onchange="updatePrice()">
+                                    Size S
+                                </label>
+                                <label>
+                                    <input type="radio" name="drinkSize" value="M" onchange="updatePrice()">
+                                    Size M
+                                </label>
+                                <label>
+                                    <input type="radio" name="drinkSize" value="L" onchange="updatePrice()">
+                                    Size L
+                                </label>
+                            </div>
+                        </div>
+                        <script th:inline="javascript">
+                            /*<![CDATA[*/
+                            function updatePrice() {
+                                // Lấy giá trị kích thước đã chọn
+                                var size = document.querySelector('input[name="drinkSize"]:checked').value;
+                                var price = /*[[${prd[0].price}]]*/
+                                // Lấy productId từ Thymeleaf (cần kiểm tra xem productId có hợp lệ không)
+                                var productId = /*[[${prd[0].proId}]]*/;
+                                if (!productId) {
+                                    console.error("Product ID is not available");
+                                    return;
+                                }
+
+                                // Gửi yêu cầu AJAX để lấy giá mới từ server
+                                var xhr = new XMLHttpRequest();
+                                xhr.open("GET", "/web/product/getPrice?productId=" + productId + "&size=" + size, true);
+                                xhr.onreadystatechange = function() {
+                                    if (xhr.readyState == 4 && xhr.status == 200) {
+                                        var response = JSON.parse(xhr.responseText);
+                                        if (response.success) {
+                                            // Cập nhật giá sản phẩm trên trang
+                                            document.getElementById('productPrice').innerText = response.price.toFixed(2);
+                                        } else {
+                                            alert("Lỗi khi lấy giá: " + response.message);
+                                        }
+                                    }
+                                };
+                                xhr.send();
+                            }
+
+                            // Đảm bảo updatePrice được gọi khi trang tải và khi người dùng chọn kích thước
+                            document.addEventListener('DOMContentLoaded', function() {
+                                updatePrice(); // Cập nhật giá khi trang tải
+                            });
+                            /*]]>*/
+                        </script>
+                        <div class="pro-details-cart-wrap">
+                            <div class="shop-list-cart-wishlist">
+                                <a title="Add To Cart" href="javascript:void(0)" onclick="addToCart()">
+                                    <i class="ion-android-cart"></i>
+                                </a>
+                                <a title="Wishlist" href="javascript:void(0)" onclick="addToWishlist()">
+                                    <i class="ion-ios-heart-outline"></i>
+                                </a>
+                            </div>
+                            <div class="product-quantity">
+                                <div class="cart-plus-minus">
+                                    <input class="cart-plus-minus-box" type="text" name="qtybutton" value="2">
+                                </div>
+                            </div>
+                        </div>
+
+                        <script th:inline="javascript">
+                            /*<![CDATA[*/
+                            function addToCart() {
+                                // Get product details from Thymeleaf - now as properly defined JS variables
+                                var productId = /*[[${prd[0].proId}]]*/;
+                                var price = /*[[${prd[0].price}]]*/;
+                                var productName = /*[[${prd[0].name}]]*/;
+                                console.log("gias: "+ price);
+
+                                // Get selected size value
+                                var size = document.querySelector('input[name="drinkSize"]:checked').value;
+
+                                // Get quantity value from the input box
+                                var qty = parseInt(document.querySelector(".cart-plus-minus-box").value);
+
+                                // Basic validation for quantity
+                                if (isNaN(qty) || qty < 1) {
+                                    alert("Please enter a valid quantity (greater than 0).");
+                                    return;
+                                }
+
+                                // Construct the URL correctly using ? and & for parameters
+                                var redirectUrl = '/web/product/addToCart?productId=' + productId +
+                                    '&qty=' + qty +
+                                    '&size=' + size +
+                                    '&price=' + price;
+
+                                // Log data to the console (for debugging)
+                                console.log("Adding to cart: Product ID: " + productId + ", Name: " + productName + ", Qty: " + qty + ", Size: " + size + ", Price: " + price);
+
+                                // Redirect the user to the backend URL
+                                window.location.href = redirectUrl;
+                            }
+                            function addToWishlist() {
+                                // Get product details from Thymeleaf - now as properly defined JS variables
+                                var productId = /*[[${prd[0].proId}]]*/;
+                                var price = /*[[${prd[0].price}]]*/;
+                                var productName = /*[[${prd[0].name}]]*/;
+                                console.log("gias: "+ price);
+
+                                // Get selected size value
+                                var size = document.querySelector('input[name="drinkSize"]:checked').value;
+
+                                // Get quantity value from the input box
+                                var qty = parseInt(document.querySelector(".cart-plus-minus-box").value);
+
+                                // Basic validation for quantity
+                                if (isNaN(qty) || qty < 1) {
+                                    alert("Please enter a valid quantity (greater than 0).");
+                                    return;
+                                }
+
+                                // Construct the URL correctly using ? and & for parameters
+                                var redirectUrl = '/web/product/addToWishlist?productId=' + productId +
+                                    '&qty=' + qty +
+                                    '&size=' + size +
+                                    '&price=' + price;
+
+                                // Log data to the console (for debugging)
+                                console.log("Adding to cart: Product ID: " + productId + ", Name: " + productName + ", Qty: " + qty + ", Size: " + size + ", Price: " + price);
+
+                                // Redirect the user to the backend URL
+                                window.location.href = redirectUrl;
+                            }
+
+                            /*]]>*/
+                        </script>
+                        <div class="pro-dec-categories">
+                            <ul>
+                                <!-- Danh sách danh mục -->
+                            </ul>
+                        </div>
+
+                        <div class="pro-dec-categories">
+                            <ul>
+                                <!-- Danh sách tag -->
+                            </ul>
+                        </div>
+
+                        <div class="pro-dec-social">
+                            <ul>
+                                <li><a class="tweet" href="#"><i class="ion-social-twitter"></i> Tweet</a></li>
+                                <li><a class="share" href="#"><i class="ion-social-facebook"></i> Share</a></li>
+                                <li><a class="google" href="#"><i class="ion-social-googleplus-outline"></i> Google+</a>
+                                </li>
+                                <li><a class="pinterest" href="#"><i class="ion-social-pinterest"></i> Pinterest</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="description-review-area pb-100">
+        <div class="container">
+            <div class="description-review-wrapper">
+                <div class="description-review-topbar nav text-center">
+                    <a class="active" data-bs-toggle="tab" href="#des-details2">Related Products</a>
+                    <a data-bs-toggle="tab" href="#des-details3" id="review-tab">Review</a>
+                </div>
+                <div class="tab-content description-review-bottom">
+                    <div id="des-details2" class="tab-pane active">
+                        <div class="product-anotherinfo-wrapper">
+                            <ul>
+                                <div class="product-area pb-95">
+                                    <div class="container">
+                                        <div class="product-top-bar section-border mb-25">
+                                            <div class="section-title-wrap">
+                                                <h3 class="section-title section-bg-white">Related Products</h3>
+                                            </div>
+                                        </div>
+                                        <div class="related-product-active owl-carousel product-nav">
+                                            <div class="product-wrapper" th:each="product : ${relatedProducts}">
+                                                <div class="product-img">
+                                                    <a th:href="@{/web/product/detail/{id}(id=${product.proId})}">
+                                                        <img th:src="@{${product.imageLink}}" alt="Product Image">
+                                                    </a>
+                                                    <div class="product-action">
+                                                        <div class="pro-action-left">
+                                                            <a title="Add to Cart" th:href="@{/web/product/detail/{id}(id=${product.proId})}">
+                                                                <i class="ion-android-cart"></i> Buy Item
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="product-content">
+                                                    <h4 th:text="${product.name}"></h4>
+                                                    <span th:text="${product.price} + ' $'"></span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </ul>
+                        </div>
+                    </div>
+
+
+
+                    <div id="des-details3" class="tab-pane">
+                        <!-- Danh sách đánh giá -->
+                        <input type="hidden" name="productId2" id="productId2" th:value="${prd[0].proId}" />
+                        <div class="rattings-wrapper" id="ratings-list">
+                            <!-- Các đánh giá sẽ được render từ JavaScript -->
+                        </div>
+
+                        <script>
+                            // Lắng nghe sự kiện khi nhấn vào tab Review
+                            document.getElementById("review-tab").addEventListener("click", function() {
+                                var productId = document.getElementById("productId2").value;
+
+                                // Gọi API để lấy danh sách đánh giá của sản phẩm
+                                fetch("/api/ratings/product/" + productId) // Đảm bảo prd[0].proId chứa ID sản phẩm đúng
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        const ratingsContainer = document.querySelector(".rattings-wrapper");
+                                        ratingsContainer.innerHTML = ""; // Xóa nội dung cũ để tránh trùng lặp
+
+                                        // Nếu không có đánh giá, hiển thị thông báo
+                                        if (data.length === 0) {
+                                            ratingsContainer.innerHTML = "<p>No ratings available for this product.</p>";
+                                        } else {
+                                            ratingsContainer.innerHTML = `<h3 class="soluong" >Số lượng đánh giá: ${data.length}</h3>`;
+                                            // Duyệt qua các đánh giá và chèn vào trong phần tử
+                                            data.forEach(rating => {
+                                                ratingsContainer.innerHTML += `
+                                              <div class="ratting-one">
+                                                <div class="star-author-all">
+                                                    <div class="ratting-user">
+                                                        <h3>${rating.userName}</h3> <!-- Tên người đánh giá -->
+                                                    </div>
+                                                    <div class="ratting-star f-left">
+                                                        ${"★".repeat(rating.rate)}${"☆".repeat(5 - rating.rate)} <!-- Số sao -->
+                                                        <span>(${rating.rate} sao)</span>
+                                                    </div>
+                                                </div>
+                                                <p class="ratting-noidung">Nội dung: ${rating.content}</p> <!-- Nội dung đánh giá -->
+                                                <div class="ratting-date">
+                                                    <span>Ngày đăng:  ${rating.date}</span> <!-- Ngày giờ đăng -->
+                                                </div>
+                                            </div>
+                            `;
+                                            });
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error("Error fetching ratings:", error);
+                                    });
+                            });
+                        </script>
+
+                        <!-- Form thêm đánh giá -->
+                    <div class="ratting-form-wrapper">
+                        <h3>Thêm đánh giá của bạn :</h3>
+                        <div class="ratting-form">
+                            <form id="ratingForm">
+                                <!-- Chọn số sao -->
+                                <div class="star-box">
+                                    <h2>Đánh giá:</h2>
+                                    <div class="ratting-star" id="star-rating">
+                                        <i class="ion-star" data-value="1"></i>
+                                        <i class="ion-star" data-value="2"></i>
+                                        <i class="ion-star" data-value="3"></i>
+                                        <i class="ion-star" data-value="4"></i>
+                                        <i class="ion-star" data-value="5"></i>
+                                    </div>
+                                </div>
+                                <!-- Nhập tên -->
+                                <div class="col-md-6">
+                                    <!-- Nhập bình luận -->
+                                    <div class="col-md-12">
+                                        <div class="rating-form-style form-submit">
+                                            <textarea id="comment" name="comment" placeholder="Viết bình luận..." required></textarea>
+<!--                                            <span id="productID" th:text="" style="display:none;">ID</span>-->
+                                            <input type="hidden" name="productId" id="productId" th:value="${prd[0].proId}" /> <!-- Thay thế giá trị productId -->
+                                            <input id="submit-rating" type="button" value="Thêm đánh giá">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <script>
+                        // Xử lý sự kiện khi người dùng chọn sao
+                        let ratingValue = 0;  // Biến để lưu giá trị sao
+                        document.querySelectorAll("#star-rating i").forEach(star => {
+                            star.addEventListener("click", function () {
+                                ratingValue = parseInt(this.getAttribute("data-value"));
+                                console.log("Đánh giá sao:", ratingValue);  // Log để kiểm tra số sao
+
+                                document.querySelectorAll("#star-rating i").forEach(star => {
+                                    star.classList.remove("theme-color"); // Xóa lớp theme-color cũ
+                                });
+
+                                // Thêm lớp theme-color vào các sao đã chọn
+                                for (let i = 0; i < ratingValue; i++) {
+                                    document.querySelectorAll("#star-rating i")[i].classList.add("theme-color");
+                                }
+                            });
+                        });
+                        document.getElementById("submit-rating").addEventListener("click", function (e) {
+                            e.preventDefault();
+
+                            // Lấy dữ liệu từ form
+                            const formData = new FormData();
+                             formData.append("userId", 19); // Gửi ID người dùng đã đăng nhập
+                            formData.append("productId", document.getElementById("productId").value); // Lấy productId từ input ẩn
+                            formData.append("content", document.getElementById("comment").value); // Lấy nội dung bình luận
+                            formData.append("rate", ratingValue); // Số sao đã chọn
+                            formData.append("platform", "web");
+                            formData.append("date", new Date().toISOString()); // Lấy thời gian hiện tại
+                            console.log("Dữ liệu gửi đi:", formData); // Log dữ liệu để kiểm tra
+
+                            // Gửi yêu cầu POST tới API thêm đánh giá
+                            fetch("/api/ratings/add", {
+                                method: "POST",
+                                body: formData // Gửi dữ liệu dưới dạng form data
+                            }).then(response => response.text())
+                                .then(data => {
+                                    console.log("Dữ liệu phản hồi từ server:", data); // Log dữ liệu phản hồi từ server
+                                    alert("Đánh giá đã được thêm thành công!");
+                                    location.reload(); // Tải lại trang để hiển thị đánh giá mới
+                                }).catch(error => {
+                                console.error("Error:", error);
+                                alert("Để đánh giá sản phẩm, bạn cần phải đăng nhập!");
+                            });
+                        });
+                    </script>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>
+    <!-- Additional product info, description, and related products would go here -->
+
+    <script th:src="@{/assets/js/vendor/jquery-1.12.4.min.js}"></script>
+    <script th:src="@{/assets/js/popper.js}"></script>
+    <script th:src="@{/assets/js/bootstrap.min.js}"></script>
+    <script th:src="@{/assets/js/imagesloaded.pkgd.min.js}"></script>
+    <script th:src="@{/assets/js/isotope.pkgd.min.js}"></script>
+    <script th:src="@{/assets/js/ajax-mail.js}"></script>
+    <script th:src="@{/assets/js/owl.carousel.min.js}"></script>
+    <script th:src="@{/assets/js/plugins.js}"></script>
+    <script th:src="@{/assets/js/main.js}"></script>
+
+</body>
+</html>

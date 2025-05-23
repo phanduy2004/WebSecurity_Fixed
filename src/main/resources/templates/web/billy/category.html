@@ -1,0 +1,198 @@
+<!doctype html>
+<html class="no-js" lang="zxx" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/layout-web.html}">
+
+<body>
+<div layout:fragment="content">
+        <div class="breadcrumb-area gray-bg">
+            <div class="container">
+                <div class="breadcrumb-content">
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li class="active">Shop Grid Style </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="shop-page-area pt-100 pb-100">
+            <div class="container">
+                <div class="row flex-row-reverse">
+                    <div class="col-lg-9">
+                        <div class="shop-topbar-wrapper">
+                            <div class="shop-topbar-left">
+                                <ul class="view-mode">
+                                    <li class="active"><a href="#product-grid" data-view="product-grid"><i class="fa fa-th"></i></a></li>
+                                </ul>
+                                <p>Danh Sách Sản Phẩm: <span th:text="${name}"></span></p>
+                            </div>
+                            <div class="product-sorting-wrapper">
+                                <div class="product-show shorting-style">
+                                    <label>Sort by:</label>
+                                    <select>
+                                        <option value="">Default</option>
+                                        <option value=""> Rating</option>
+                                        <option value=""> price</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid-list-product-wrapper">
+                            <div class="product-grid product-view pb-20">
+                                <div class="row">
+                                    <div class="tab-content jump">
+                                        <div id="tab1" class="tab-pane active">
+                                            <div class="row">
+                                                <div class="product-width pro-list-none col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12 mb-30" th:each="product : ${products}">
+<!--                                                <div class="custom-col-5" th:each="product : ${products}">-->
+                                                    <div class="product-wrapper mb-25">
+                                                        <div class="product-img">
+                                                            <a th:href="@{/web/product/detail/{id}(id=${product.proId})}">
+                                                                <img th:src="@{${product.imageLink}}" alt="Product Image">
+                                                            </a>
+                                                            <div class="product-action">
+                                                                <div class="pro-action-left">
+                                                                    <a title="Add to Cart"  th:href="@{/web/product/detail/{id}(id=${product.proId})}"><i class="ion-android-cart"></i> Buy Item</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="product-content">
+                                                            <h4>
+                                                                <a th:href="@{${product.proId}}" th:text="${product.name}">PRODUCT NAME</a>
+                                                            </h4>
+                                                            <div class="product-price-wrapper">
+                                                                <span th:text="${product.price} + ' VND'"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- PHẦN PHÂN TRANG -->
+                                    <div class="pagination-wrapper d-flex justify-content-center mt-4">
+                                        <ul class="custom-pagination">
+                                            <!-- Nút Previous -->
+                                            <li class="page-item" th:if="${currentPage > 1}">
+                                                <a class="page-link" th:href="@{/web/category/{id}(id=${idcate}, pageNo=${currentPage - 1})}" aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                </a>
+                                            </li>
+
+                                            <!-- Số Trang -->
+                                            <li class="page-item" th:each="pageNum : ${#numbers.sequence(1, totalPages)}" th:classappend="${pageNum == currentPage} ? 'active' : ''">
+                                                <a class="page-link" th:href="@{/web/category/{id}(id=${idcate}, pageNo=${pageNum})}" th:text="${pageNum}"></a>
+                                            </li>
+
+                                            <!-- Nút Next -->
+                                            <li class="page-item" th:if="${currentPage < totalPages}">
+                                                <a class="page-link" th:href="@{/web/category/{id}(id=${idcate}, pageNo=${currentPage + 1})}" aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- KẾT THÚC PHÂN TRANG -->
+                            </div>
+                        </div>
+
+
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="shop-sidebar-wrapper gray-bg-7 shop-sidebar-mrg">
+                            <div class="shop-widget">
+                                <h4 class="shop-sidebar-title">Categories</h4>
+                                <div class="shop-catigory">
+                                    <ul id="shop-catigory-1" class="panel-collapse collapse show">
+                                        <li th:each="category : ${categories}">
+                                            <a th:href="@{/web/category/{id}(id=${category.cateId})}" th:text="${category.name} ">Category Name</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="shop-price-filter mt-40 shop-sidebar-border pt-35">
+                                <h4 class="shop-sidebar-title">Price Filter</h4>
+                                <div class="price_filter mt-10">
+                                    <span>Giá Khoảng:  </span>
+                                    <div id="slider-range"></div>
+                                    <div class="price_slider_amount">
+                                        <div class="label-input">
+                                            <input type="text" id="amount" name="price"  placeholder="Add Your Price" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="categoryId" th:data-id="${idcate}"></div>
+                            <script>
+                                $(document).ready(function() {
+                                    $("#slider-range").on("slidestop", function() {
+                                        var minPrice = $("#slider-range").slider("values", 0);
+                                        var maxPrice = $("#slider-range").slider("values", 1);
+                                        var categoryId = $("#categoryId").data("id") || '0';// ID danh mục hiện tại (ví dụ cố định là 1)
+                                        console.log("Min Price: " + minPrice);
+                                        console.log("Max Price: " + maxPrice);
+                                        console.log("Category ID: " + categoryId);
+
+                                        // Gửi request AJAX
+                                        $.ajax({
+                                            url: "/web/category/api/" + categoryId,
+                                            type: "GET",
+                                            data: {
+                                                minPrice: minPrice,
+                                                maxPrice: maxPrice
+                                            },
+                                            success: function(data) {  console.log("Response Data: ", data);
+                                                // Xóa sản phẩm cũ
+                                                $(".product-view .row").empty();
+
+                                                // Lặp qua danh sách sản phẩm trả về và thêm vào giao diện
+                                                data.forEach(function(product) {
+                                                    var productHtml = `
+                        <div class="product-width pro-list-none col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12 mb-30">
+                            <div class="product-wrapper mb-25">
+                                <div class="product-img">
+                                    <a href="/web/product/detail/${product.proId}">
+                                        <img src="${product.imageLink}" alt="Product Image">
+                                    </a>
+                                    <div class="product-action">
+                                        <div class="pro-action-left">
+                                            <a title="Add to Cart" href="/web/product/detail/${product.proId}">
+                                                <i class="ion-android-cart"></i> Buy Item
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-content">
+                                    <h4>
+                                        <a href="/web/product/detail/${product.proId}">${product.name}</a>
+                                    </h4>
+                                    <div class="product-price-wrapper">
+                                        <span>${product.price} VND</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                                                    // Thêm sản phẩm vào danh sách
+                                                    $(".product-view .row").append(productHtml);
+                                                });
+                                            },
+                                            error: function() {
+                                                alert("Lọc giá thất bại. Vui lòng thử lại!");
+                                            }
+                                        });
+                                    });
+                                });
+                            </script>
+
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+</div>
+</body>
+
+<!-- Mirrored from htmldemo.net/billy/billy/shop.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 06 Nov 2024 15:24:31 GMT -->
+</html>
