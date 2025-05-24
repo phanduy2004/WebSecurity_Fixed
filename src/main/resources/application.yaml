@@ -1,23 +1,24 @@
-# application.yml
-
 spring:
   application:
     name: ALOMilkTea
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/billyshop2?useUnicode=true&character_set_server=utf8mb4&connectionCollation=utf8mb4_unicode_ci&useSSL=true&serverTimezone=UTC&requireSSL=true
+    url: jdbc:mysql://localhost:3306/alomilktea?useUnicode=true&character_set_server=utf8mb4&connectionCollation=utf8mb4_unicode_ci&useSSL=true&serverTimezone=UTC&requireSSL=true
     username: root
     password: duy301104
   jpa:
     show-sql: true
     hibernate:
       ddl-auto: update
-    properties:
-      hibernate:
-        format_sql: true
+      properties:
+        hibernate:
+          format_sql: true
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
+  mandatory-file-encoding: UTF-8
+  mail:
+    default-encoding: UTF-8
 
 server:
   port: 8888
@@ -28,6 +29,11 @@ server:
     key-password: BilishopTLS@2025
     key-store-type: JKS
     key-alias: bilishop
+  servlet:
+    session:
+      cookie:
+        same-site: strict
+  server-header: disabled
 
 storage:
   location: C:\\uploads
@@ -41,3 +47,8 @@ payment:
     version: 2.1.0
     command: pay
     orderType: other
+
+api:
+  prefix: /api/v1
+  name: api
+  port: 8888

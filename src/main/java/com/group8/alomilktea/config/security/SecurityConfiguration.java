@@ -14,13 +14,16 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,13 +31,10 @@ import java.util.List;
 
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
-
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration {
-
-
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -56,7 +56,6 @@ public class SecurityConfiguration {
 
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
-
     }
 
     @Bean
@@ -73,10 +72,13 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-    	httpSecurity
-        .csrf(AbstractHttpConfigurer::disable)
-        .authorizeHttpRequests(
-                auth -> auth
+        httpSecurity
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Kích hoạt CORS
+                .csrf(csrf -> csrf
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .ignoringRequestMatchers("/api/v1/payment/vn-pay-callback", "/api/**") // Bỏ qua CSRF cho VNPAY và API
+                )
+                .authorizeHttpRequests(auth -> auth
                         .requestMatchers(antMatcher("/admin/**")).hasAnyAuthority(UserRole.ADMIN.getRoleName())
                         .requestMatchers(antMatcher("/manager/**")).hasAnyAuthority(UserRole.MANAGER.getRoleName())
                         .requestMatchers(antMatcher("/api/**")).permitAll()
@@ -88,37 +90,80 @@ public class SecurityConfiguration {
                         .requestMatchers(antMatcher("/**")).permitAll()
                         .requestMatchers(antMatcher("/shipper/**")).hasAnyAuthority(UserRole.SHIPPER.getRoleName())
                         .anyRequest().authenticated()
-        ).formLogin(login -> login
-                .loginPage("/auth/login")
-                .defaultSuccessUrl("/")
-                .failureHandler(new AuthenticationFailureHandler() {
-					@Override
-					public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
-							AuthenticationException exception)
-							throws IOException, ServletException {
-						request.getSession().setAttribute("loginStatus", "failure");
-                        response.sendRedirect("/auth/login?message=error");				
-					}
-                }).permitAll())
-        .rememberMe(re -> re.key("uniqueAndSecret")
-                .rememberMeCookieName("tracker-remember-me")
-                .userDetailsService(userDetailsService())
-                .tokenValiditySeconds(5000)
-        )
-        .logout(l -> l.invalidateHttpSession(true)
-                .clearAuthentication(true)
-                .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout"))
-                .logoutSuccessUrl("/")
-                .deleteCookies("JSESSIONID")
-                .permitAll()
-        )
-        .exceptionHandling(e -> e.accessDeniedPage("/403"))
-        .sessionManagement(session -> session
-        .maximumSessions(1)
-        .expiredUrl("/")
-        .maxSessionsPreventsLogin(true)) ;
+                )
+                .formLogin(login -> login
+                        .loginPage("/auth/login")
+                        .defaultSuccessUrl("/")
+                        .failureHandler(new AuthenticationFailureHandler() {
+                            @Override
+                            public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+                                                                AuthenticationException exception) throws IOException, ServletException {
+                                request.getSession().setAttribute("loginStatus", "failure");
+                                response.sendRedirect("/auth/login?message=error");
+                            }
+                        }).permitAll()
+                )
+                .rememberMe(re -> re
+                        .key("uniqueAndSecret")
+                        .rememberMeCookieName("tracker-remember-me")
+                        .userDetailsService(userDetailsService())
+                        .tokenValiditySeconds(5000)
+                )
+                .logout(l -> l
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout"))
+                        .logoutSuccessUrl("/")
+                        .deleteCookies("JSESSIONID")
+                        .permitAll()
+                )
+                .exceptionHandling(e -> e
+                        .accessDeniedPage("/403")
+                )
+                .sessionManagement(session -> session
+                        .maximumSessions(1)
+                        .expiredUrl("/")
+                        .maxSessionsPreventsLogin(true)
+                )
+                .requiresChannel(channel -> channel
+                        .anyRequest().requiresSecure() // Bắt buộc HTTPS
+                )
+                .headers(headers -> headers
+                        .httpStrictTransportSecurity(hsts -> hsts
+                                .includeSubDomains(true)
+                                .maxAgeInSeconds(31536000)
+                                .preload(true)
+                        )
+                        .contentSecurityPolicy(csp -> csp
+                                .policyDirectives("default-src 'self'; script-src 'self' https://maps.googleapis.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https://*; connect-src 'self' https://maps.googleapis.com;")
+                        )
+                        .frameOptions(frameOptions -> frameOptions.deny())
+                );
 
+        return httpSecurity.build();
+    }
 
-return httpSecurity.build();
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("https://localhost:8888"); // Khớp với server.port
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
+    }
+
+    @Bean
+    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("https://localhost:8888"); // Khớp với server.port
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 }
