@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Lỗi</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/> </head>
+<body>
+<div class="container">
+  <h1>Đã có lỗi xảy ra</h1>
+  <p th:text="${errorMessage}">Thông báo lỗi mặc định.</p>
+  <p th:if="${errorDetails}" th:text="${errorDetails}"></p>
+  <a th:href="@{/web/product}">Quay lại trang chủ</a>
+</div>
+</body>
+</html>
