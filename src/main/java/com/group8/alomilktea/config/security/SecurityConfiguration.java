@@ -126,7 +126,7 @@ public class SecurityConfiguration {
                 // Thêm cấu hình CSP
                 .headers(headers -> headers
                         .contentSecurityPolicy(csp -> csp
-                                .policyDirectives("default-src 'self'; script-src 'self' 'nonce-xyz'; style-src 'self' 'nonce-xyz'; img-src 'self' data: https://cdn.jsdelivr.net; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; connect-src 'self'; report-uri /csp-report")                        )
+                                .policyDirectives("default-src 'self'; script-src 'self' 'nonce-xyz'; style-src 'self' 'nonce-xyz'; img-src 'self' data: https:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; connect-src 'self'; report-uri /csp-report")                        )
                 );
 
         return httpSecurity.build();
