@@ -73,6 +73,9 @@ public class SecurityConfiguration {
         return authConfig.getAuthenticationManager();
     }
 
+
+
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
@@ -90,7 +93,8 @@ public class SecurityConfiguration {
                                 .requestMatchers(antMatcher("/**")).permitAll()
                                 .requestMatchers(antMatcher("/shipper/**")).hasAnyAuthority(UserRole.SHIPPER.getRoleName())
                                 .anyRequest().authenticated()
-                ).formLogin(login -> login
+                )
+                .formLogin(login -> login
                         .loginPage("/auth/login")
                         .defaultSuccessUrl("/")
                         .failureHandler(new AuthenticationFailureHandler() {
@@ -119,12 +123,11 @@ public class SecurityConfiguration {
                         .maximumSessions(1)
                         .expiredUrl("/")
                         .maxSessionsPreventsLogin(true))
+                // Thêm cấu hình CSP
                 .headers(headers -> headers
                         .contentSecurityPolicy(csp -> csp
-                                .policyDirectives("default-src 'self'; script-src 'self' 'nonce-xyz'; style-src 'self' 'nonce-xyz'; img-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; connect-src 'self'; report-uri /csp-report")
-                        )
-                );;
-
+                                .policyDirectives("default-src 'self'; script-src 'self' 'nonce-xyz'; style-src 'self' 'nonce-xyz'; img-src 'self' data: https://cdn.jsdelivr.net; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; connect-src 'self'; report-uri /csp-report")                        )
+                );
 
         return httpSecurity.build();
     }
