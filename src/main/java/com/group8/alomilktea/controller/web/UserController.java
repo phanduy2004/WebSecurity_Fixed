@@ -11,11 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.servlet.ModelAndView;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -23,11 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@RequestMapping(value = {"web/product"})
+@RequestMapping(value = {"web/product"})  // Cố định id = 1
 @Controller
 public class UserController {
-
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private IProductService productService;
@@ -37,73 +32,59 @@ public class UserController {
 
     @Autowired(required = true)
     IUserService userService;
-
     @Autowired(required = true)
     IWishlistService wishlistService;
-
     @Autowired
     ISessionService sessionService;
 
     @GetMapping()
     public String trangchu(Model model) {
-        String currentUserName = "1";
+        String currentUserName = "1";  // Giả lập người dùng có id = 1
+        // Lấy danh sách sản phẩm
         List<ProductDetailDTO> list = productService.findProductInfoBySize();
         model.addAttribute("products", list);
-        model.addAttribute("userId", currentUserName);
+        model.addAttribute("userId", currentUserName);  // Thêm userId vào model
+        System.out.println("Product list: " + list);
         return "web/billy/index";
     }
+
 
     @GetMapping("detail/{id}")
     public String product(@PathVariable("id") Integer id, Model model) {
         Product product1 = productService.findById(id);
-
-        if (product1 == null) {
-            model.addAttribute("errorMessage", "Sản phẩm với ID " + id + " không tồn tại.");
-            return "error/custom_error";
-        }
-
         Integer categoryId = product1.getCategory().getCateId();
-        Page<ProductDetailDTO> relatedProductsPage = productService.findProductInfoByCatIDPaged(categoryId, 1, 5);
-        List<ProductDetailDTO> relatedProducts = relatedProductsPage.getContent();
-        model.addAttribute("relatedProducts", relatedProducts);
-
+        Page<ProductDetailDTO> relatedProducts = productService.findProductInfoByCatIDPaged(categoryId,1,5);
+        model.addAttribute("relatedProducts",  relatedProducts.getContent());
+        System.out.println("Related Products: " + relatedProducts.getContent());
+        // Lấy thông tin người dùng đã đăng nhập
         User user = userService.getUserLogged();
         if (user != null) {
+            // Lưu session của người dùng
             SessionKey sessionKey = new SessionKey(user.getUserId(), id);
             Session session = new Session();
             session.setId(sessionKey);
             session.setProduct(product1);
             session.setUser(user);
-            session.setDate(java.sql.Timestamp.valueOf(LocalDateTime.now()));
+            session.setDate(java.sql.Timestamp.valueOf(LocalDateTime.now()));  // Lưu ngày giờ hiện tại
+
+            // Lưu vào cơ sở dữ liệu
             sessionService.save(session);
         }
         List<ProductDetailDTO> product = productService.findProductInfoByID(id);
-        model.addAttribute("prd", product);
+        model.addAttribute("prd", product);  // Sửa lại là "prd" thay vì "product"
+        System.out.println("Product found: " + product);
         return "web/billy/product-details";
     }
 
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ModelAndView handleMethodArgumentTypeMismatch(
-            MethodArgumentTypeMismatchException ex,
-            HttpServletRequest request
-    ) {
-        String invalidValue = (ex.getValue() != null) ? ex.getValue().toString() : "null";
-
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("errorMessage", "Định dạng ID sản phẩm không hợp lệ.");
-        mav.addObject("errorDetails", "Giá trị '" + invalidValue + "' không thể được sử dụng làm ID sản phẩm.");
-        mav.setViewName("error/custom_error");
-        return mav;
-    }
-
+    // Controller xử lý yêu cầu AJAX để lấy giá sản phẩm theo size
     @RequestMapping("/getPrice")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getPrice(@RequestParam Integer productId, @RequestParam String size) {
         Map<String, Object> response = new HashMap<>();
         try {
-            ProductAttribute attribute = ProductAttribute.getEnum(size);
-            ProductDetail product = productService.findPriceByProductIdAndSize(productId, attribute);
+            // Sử dụng phương thức trả về đối tượng duy nhất
+            ProductDetail product = productService.findPriceByProductIdAndSize(productId, ProductAttribute.getEnum(size));
+            System.out.println(product);
             if (product != null) {
                 response.put("success", true);
                 response.put("price", product.getPrice());
@@ -111,15 +92,13 @@ public class UserController {
                 response.put("success", false);
                 response.put("message", "Không tìm thấy sản phẩm với kích thước này.");
             }
-        } catch (IllegalArgumentException e) {
-            response.put("success", false);
-            response.put("message", "Kích thước không hợp lệ: " + size);
         } catch (Exception e) {
             response.put("success", false);
             response.put("message", "Lỗi khi lấy giá sản phẩm.");
         }
         return ResponseEntity.ok(response);
     }
+
 
     @GetMapping("/addToCart")
     public ResponseEntity<String> addToCart(
@@ -130,34 +109,51 @@ public class UserController {
             HttpServletRequest request) {
 
         try {
+
             User userLogged = userService.getUserLogged();
             if (userLogged == null) {
+                // Nếu chưa đăng nhập, chuyển hướng đến trang login
                 return ResponseEntity.status(HttpStatus.FOUND)
-                        .header("Location", "/auth/login")
+                        .header("Location", "/auth/login") // Đường dẫn tới trang login
                         .body("Vui lòng đăng nhập để tiếp tục.");
             }
-
-            ProductAttribute attribute = ProductAttribute.getEnum(size);
-            ProductDetail product1 = productService.findPriceByProductIdAndSize(proId, attribute);
-
+            String successMessage = "Thêm vào giỏ hàng thành công";
+            ProductDetail product1 = productService.findPriceByProductIdAndSize(proId, ProductAttribute.getEnum(size));
+            // Tìm sản phẩm trong cơ sở dữ liệu
             Optional<Product> optProduct = productService.findById0p(proId);
             if (optProduct.isEmpty()) {
                 return new ResponseEntity<>("Sản phẩm không tồn tại", HttpStatus.NOT_FOUND);
             }
-            Product product = optProduct.get();
 
+            Product product = optProduct.get();
+//            User userLogged = userService.getUserLogged();
+
+            // Lấy danh sách giỏ hàng của người dùng
             List<Cart> cartList = cartService.findByUserId(userLogged.getUserId());
+
+            // Tìm sản phẩm trong giỏ hàng với cùng proId và size
             Optional<Cart> existingCartItem = cartList.stream()
                     .filter(cart -> cart.getProduct().getProId().equals(proId) && cart.getId().getSize().equals(size))
                     .findFirst();
 
             if (existingCartItem.isPresent()) {
+                // Nếu sản phẩm cùng proId và size đã tồn tại, cộng dồn số lượng
                 Cart cart = existingCartItem.get();
                 int updatedQuantity = cart.getQuantity() + qty;
+
+                // Kiểm tra tồn kho nếu cần
+
+                // Cập nhật số lượng trong giỏ hàng
                 cart.setQuantity(updatedQuantity);
                 cartService.save(cart);
+
+                // Trả lại URL hiện tại
+                return ResponseEntity.status(HttpStatus.FOUND)
+                        .header("Location", "/user-cart") // Chuyển hướng về trang chủ
+                        .body(successMessage);
             } else {
-                CartKey cartKey = new CartKey(userLogged.getUserId(), proId, size);
+                // Nếu sản phẩm khác size hoặc không tồn tại trong giỏ hàng, thêm mục mới
+                CartKey cartKey = new CartKey(userLogged.getUserId(), proId, size);  // Sử dụng proId và size làm khóa hợp nhất
                 Cart newCart = new Cart();
                 newCart.setId(cartKey);
                 newCart.setProduct(product);
@@ -165,16 +161,20 @@ public class UserController {
                 newCart.getId().setSize(size);
                 newCart.setQuantity(qty);
                 newCart.setPrice(product1.getPrice());
-                cartService.save(newCart);
-            }
-            return ResponseEntity.status(HttpStatus.FOUND)
-                    .header("Location", "/user-cart")
-                    .body("Thêm vào giỏ hàng thành công");
 
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>("Kích thước sản phẩm không hợp lệ: " + size, HttpStatus.BAD_REQUEST);
+                // Kiểm tra tồn kho nếu cần
+
+                // Lưu giỏ hàng mới
+                cartService.save(newCart);
+
+                // Trả lại URL hiện tại
+                return ResponseEntity.status(HttpStatus.FOUND)
+                        .header("Location", "/user-cart") // Chuyển hướng về trang chủ
+                        .body(successMessage);
+            }
         } catch (Exception e) {
-            return new ResponseEntity<>("Lỗi khi thêm sản phẩm vào giỏ hàng.", HttpStatus.INTERNAL_SERVER_ERROR);
+            e.printStackTrace();
+            return new ResponseEntity<>("Lỗi khi thêm sản phẩm vào giỏ hàng: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -189,33 +189,48 @@ public class UserController {
         try {
             User userLogged = userService.getUserLogged();
             if (userLogged == null) {
+                // Nếu chưa đăng nhập, chuyển hướng đến trang login
                 return ResponseEntity.status(HttpStatus.FOUND)
-                        .header("Location", "/auth/login")
+                        .header("Location", "/auth/login") // Đường dẫn tới trang login
                         .body("Vui lòng đăng nhập để tiếp tục.");
             }
-
-            ProductAttribute attribute = ProductAttribute.getEnum(size);
-            ProductDetail product1 = productService.findPriceByProductIdAndSize(proId, attribute);
-
+            String successMessage = "Thêm vào giỏ hàng thành công";
+            ProductDetail product1 = productService.findPriceByProductIdAndSize(proId, ProductAttribute.getEnum(size));
+            // Tìm sản phẩm trong cơ sở dữ liệu
             Optional<Product> optProduct = productService.findById0p(proId);
             if (optProduct.isEmpty()) {
                 return new ResponseEntity<>("Sản phẩm không tồn tại", HttpStatus.NOT_FOUND);
             }
-            Product product = optProduct.get();
 
+            Product product = optProduct.get();
+//            User userLogged = userService.getUserLogged();
+
+            // Lấy danh sách giỏ hàng của người dùng
             List<Wishlist> wishList = wishlistService.findByUserId(userLogged.getUserId());
-            Optional<Wishlist> existingWishlistItem = wishList.stream()
-                    .filter(item -> item.getProduct().getProId().equals(proId) && item.getId().getSize().equals(size))
+
+            // Tìm sản phẩm trong giỏ hàng với cùng proId và size
+            Optional<Wishlist> existingCartItem = wishList.stream()
+                    .filter(cart -> cart.getProduct().getProId().equals(proId) && cart.getId().getSize().equals(size))
                     .findFirst();
 
-            String successMessage = "Thêm vào danh sách yêu thích thành công";
-            if (existingWishlistItem.isPresent()) {
-                Wishlist wishlist = existingWishlistItem.get();
+            if (existingCartItem.isPresent()) {
+                // Nếu sản phẩm cùng proId và size đã tồn tại, cộng dồn số lượng
+                Wishlist wishlist = existingCartItem.get();
                 int updatedQuantity = wishlist.getQuantity() + qty;
+
+                // Kiểm tra tồn kho nếu cần
+
+                // Cập nhật số lượng trong giỏ hàng
                 wishlist.setQuantity(updatedQuantity);
                 wishlistService.save(wishlist);
+
+                // Trả lại URL hiện tại
+                return ResponseEntity.status(HttpStatus.FOUND)
+                        .header("Location", "/user-wishList") // Chuyển hướng về trang chủ
+                        .body(successMessage);
             } else {
-                CartKey cartKey = new CartKey(userLogged.getUserId(), proId, size);
+                // Nếu sản phẩm khác size hoặc không tồn tại trong giỏ hàng, thêm mục mới
+                CartKey cartKey = new CartKey(userLogged.getUserId(), proId, size);  // Sử dụng proId và size làm khóa hợp nhất
                 Wishlist newWishlist = new Wishlist();
                 newWishlist.setId(cartKey);
                 newWishlist.setProduct(product);
@@ -223,16 +238,31 @@ public class UserController {
                 newWishlist.getId().setSize(size);
                 newWishlist.setQuantity(qty);
                 newWishlist.setPrice(product1.getPrice());
-                wishlistService.save(newWishlist);
-            }
-            return ResponseEntity.status(HttpStatus.FOUND)
-                    .header("Location", "/user-wishList")
-                    .body(successMessage);
 
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>("Kích thước sản phẩm không hợp lệ: " + size, HttpStatus.BAD_REQUEST);
+                // Kiểm tra tồn kho nếu cần
+
+                // Lưu giỏ hàng mới
+                wishlistService.save(newWishlist);
+                // Trả lại URL hiện tại
+                return ResponseEntity.status(HttpStatus.FOUND)
+                        .header("Location", "/user-wishList") // Chuyển hướng về trang chủ
+                        .body(successMessage);
+            }
         } catch (Exception e) {
-            return new ResponseEntity<>("Lỗi khi thêm sản phẩm vào danh sách yêu thích.", HttpStatus.INTERNAL_SERVER_ERROR);
+            e.printStackTrace();
+            return new ResponseEntity<>("Lỗi khi thêm sản phẩm vào giỏ hàng: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
 }
+
+
+
+
+
+
+
+
+
+
