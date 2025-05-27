@@ -1,6 +1,6 @@
 <!doctype html>
 <html class="no-js" lang="zxx">
-    
+
 <!-- Mirrored from htmldemo.net/billy/billy/contact.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 06 Nov 2024 15:24:41 GMT -->
 <head>
         <meta charset="utf-8">
@@ -404,6 +404,7 @@
                             <h4 class="contact-title">GET IN TOUCH</h4>
                             <div class="contact-message">
                                 <form id="contact-form" action="https://htmldemo.net/billy/billy/assets/mail.php" method="post">
+                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                     <div class="row">
                                         <div class="col-lg-6">
                                             <div class="contact-form-style mb-20">

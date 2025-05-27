@@ -10,11 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.security.access.AccessDeniedException;
 
 @Service
 @RequiredArgsConstructor
@@ -62,39 +64,50 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	@Override
+	public Optional<User> findByUserName(String userName) {
+		return userRepository.findByUsername(userName);
+	}
+
+	@Override
 	public Long findShipCIdByUser(String email) {
 		return userRepository.findShipCIdByUser(email);
 	}
 
 	@Override
 	public User updateUser(User model) {
+		// Lấy thông tin người dùng hiện tại từ SecurityContextHolder
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String currentUsername = auth.getName();
+		User currentUser = userRepository.findByUsername(currentUsername)
+				.orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+
+		// Kiểm tra xem userId trong model có khớp với userId của người dùng hiện tại
 		Integer userId = model.getUserId();
-		if (userId != null) {
-			Optional<User> userOptional = userRepository.findById(userId);
-			if (userOptional.isPresent()) {
-				User user = userOptional.get();
-
-				if (model.getFullName() != null && !model.getFullName().isEmpty()) {
-					user.setFullName(model.getFullName());
-				}
-				if (model.getUsername() != null && !model.getUsername().isEmpty()) {
-					user.setUsername(model.getUsername());
-				}
-				if (model.getEmail() != null && !model.getEmail().isEmpty()) {
-					user.setEmail(model.getEmail());
-				}
-				if (model.getAddress() != null && !model.getAddress().isEmpty()) {
-					user.setAddress(model.getAddress());
-				}
-				if (model.getPhone() != null && !model.getPhone().isEmpty()) {
-					user.setPhone(model.getPhone());
-				}
-				model.setPasswordHash(user.getPasswordHash());
-
-				return userRepository.save(user);
-			}
+		if (userId == null || !userId.equals(currentUser.getUserId())) {
+			throw new AccessDeniedException("Không có quyền sửa thông tin người khác");
 		}
-		return null;
+
+		// Cập nhật thông tin cho người dùng hiện tại
+		if (model.getFullName() != null && !model.getFullName().isEmpty()) {
+			currentUser.setFullName(model.getFullName());
+		}
+		if (model.getUsername() != null && !model.getUsername().isEmpty()) {
+			currentUser.setUsername(model.getUsername());
+		}
+		if (model.getEmail() != null && !model.getEmail().isEmpty()) {
+			currentUser.setEmail(model.getEmail());
+		}
+		if (model.getAddress() != null && !model.getAddress().isEmpty()) {
+			currentUser.setAddress(model.getAddress());
+		}
+		if (model.getPhone() != null && !model.getPhone().isEmpty()) {
+			currentUser.setPhone(model.getPhone());
+		}
+
+		// Không cho phép cập nhật passwordHash từ client
+		// model.setPasswordHash(currentUser.getPasswordHash()); // Xóa dòng này để bảo mật
+
+		return userRepository.save(currentUser);
 	}
 
 	@Override

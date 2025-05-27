@@ -27,6 +27,9 @@ public interface IUserService {
 
 	Optional<User> findByEmail(String email);
 
+	Optional<User> findByUserName(String userName);
+
+
 	Long findShipCIdByUser (String email);
 
 	User updateAddress(String email, String newAddress);

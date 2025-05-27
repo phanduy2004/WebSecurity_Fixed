@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.authentication.configuration.GlobalAuthenticationConfigurerAdapter;
@@ -73,13 +74,11 @@ public class SecurityConfiguration {
         return authConfig.getAuthenticationManager();
     }
 
-
-
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .csrf(AbstractHttpConfigurer::disable)
+                //.csrf(AbstractHttpConfigurer::disable)
+                .csrf(Customizer.withDefaults()) // Bật csrf
                 .authorizeHttpRequests(
                         auth -> auth
                                 .requestMatchers(antMatcher("/admin/**")).hasAnyAuthority(UserRole.ADMIN.getRoleName())
@@ -93,8 +92,7 @@ public class SecurityConfiguration {
                                 .requestMatchers(antMatcher("/**")).permitAll()
                                 .requestMatchers(antMatcher("/shipper/**")).hasAnyAuthority(UserRole.SHIPPER.getRoleName())
                                 .anyRequest().authenticated()
-                )
-                .formLogin(login -> login
+                ).formLogin(login -> login
                         .loginPage("/auth/login")
                         .defaultSuccessUrl("/")
                         .failureHandler(new AuthenticationFailureHandler() {
@@ -118,15 +116,16 @@ public class SecurityConfiguration {
                         .deleteCookies("JSESSIONID")
                         .permitAll()
                 )
-                .exceptionHandling(e -> e.accessDeniedPage("/403"))
+                 .exceptionHandling(e -> e
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN); // Luôn trả về 403
+                            response.getWriter().write("Access Denied!");
+                        })
+                )
                 .sessionManagement(session -> session
                         .maximumSessions(1)
                         .expiredUrl("/")
-                        .maxSessionsPreventsLogin(true))
-                // Thêm cấu hình CSP
-                .headers(headers -> headers
-                        .contentSecurityPolicy(csp -> csp
-                                .policyDirectives("default-src 'self'; script-src 'self' 'nonce-xyz'; style-src 'self' 'nonce-xyz'; img-src 'self' data: https:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; connect-src 'self'; report-uri /csp-report")                        )
+                        .maxSessionsPreventsLogin(true)) ;
                 );
 
         return httpSecurity.build();

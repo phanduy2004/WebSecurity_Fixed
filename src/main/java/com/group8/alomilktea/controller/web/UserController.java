@@ -52,7 +52,7 @@ public class UserController {
     @GetMapping("detail/{id}")
     public String product(@PathVariable("id") Integer id, Model model) {
         Product product1 = productService.findById(id);
-		Integer categoryId = product1.getCategory().getCateId();
+        Integer categoryId = product1.getCategory().getCateId();
         Page<ProductDetailDTO> relatedProducts = productService.findProductInfoByCatIDPaged(categoryId,1,5);
         model.addAttribute("relatedProducts",  relatedProducts.getContent());
         System.out.println("Related Products: " + relatedProducts.getContent());
