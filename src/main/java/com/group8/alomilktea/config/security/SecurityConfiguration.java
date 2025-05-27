@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.authentication.configuration.GlobalAuthenticationConfigurerAdapter;
@@ -76,7 +77,8 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .csrf(AbstractHttpConfigurer::disable)
+                //.csrf(AbstractHttpConfigurer::disable)
+                .csrf(Customizer.withDefaults()) // Bật csrf
                 .authorizeHttpRequests(
                         auth -> auth
                                 .requestMatchers(antMatcher("/admin/**")).hasAnyAuthority(UserRole.ADMIN.getRoleName())
@@ -114,11 +116,17 @@ public class SecurityConfiguration {
                         .deleteCookies("JSESSIONID")
                         .permitAll()
                 )
-                .exceptionHandling(e -> e.accessDeniedPage("/403"))
+                .exceptionHandling(e -> e
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN); // Luôn trả về 403
+                            response.getWriter().write("Access Denied!");
+                        })
+                )
                 .sessionManagement(session -> session
                         .maximumSessions(1)
                         .expiredUrl("/")
-                        .maxSessionsPreventsLogin(true)) ;
+                        .maxSessionsPreventsLogin(true)
+                );
 
 
         return httpSecurity.build();
