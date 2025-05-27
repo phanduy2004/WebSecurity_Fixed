@@ -116,7 +116,7 @@ public class SecurityConfiguration {
                         .deleteCookies("JSESSIONID")
                         .permitAll()
                 )
-                 .exceptionHandling(e -> e
+                .exceptionHandling(e -> e
                         .accessDeniedHandler((request, response, accessDeniedException) -> {
                             response.setStatus(HttpServletResponse.SC_FORBIDDEN); // Luôn trả về 403
                             response.getWriter().write("Access Denied!");
@@ -125,7 +125,7 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session
                         .maximumSessions(1)
                         .expiredUrl("/")
-                        .maxSessionsPreventsLogin(true)) ;
+                        .maxSessionsPreventsLogin(true)
                 );
 
         return httpSecurity.build();

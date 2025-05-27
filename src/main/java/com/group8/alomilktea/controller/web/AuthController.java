@@ -294,17 +294,17 @@ public class AuthController {
     @PostMapping("auth/updateAddress")
     @ResponseBody
     public ResponseEntity<?> updateAddress( @RequestParam("homeaddress") String homeAddress,
-                                           @RequestParam("town") String town,
-                                           @RequestParam("district") String district,
-                                           @RequestParam("city") String city) {
+                                            @RequestParam("town") String town,
+                                            @RequestParam("district") String district,
+                                            @RequestParam("city") String city) {
 
         Map<String, Object> response = new HashMap<>();
         String address;
 
-            // Tạo địa chỉ đầy đủ
-            address = String.format("%s, %s, %s, %s", homeAddress, town, district, city);
+        // Tạo địa chỉ đầy đủ
+        address = String.format("%s, %s, %s, %s", homeAddress, town, district, city);
 
-            // Lấy người dùng hiện tại (ví dụ: qua SecurityContextHolder hoặc session)
+        // Lấy người dùng hiện tại (ví dụ: qua SecurityContextHolder hoặc session)
         User currentUser = userService.getUserLogged();
         if (currentUser == null) {
             response.put("status", "error");
@@ -313,11 +313,11 @@ public class AuthController {
         }
         currentUser.setAddress(address);
         userService.updateUser(currentUser);
-            // Trả về phản hồi thành công
-            response.put("status", "success");
-            response.put("message", "Cập nhật địa chỉ thành công!");
-            response.put("address", address);
-            return ResponseEntity.ok(response);
+        // Trả về phản hồi thành công
+        response.put("status", "success");
+        response.put("message", "Cập nhật địa chỉ thành công!");
+        response.put("address", address);
+        return ResponseEntity.ok(response);
     }
 
 }
