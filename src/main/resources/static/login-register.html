@@ -376,6 +376,7 @@
                                     <div class="login-form-container">
                                         <div class="login-register-form">
                                             <form action="#" method="post">
+                                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                                 <input type="text" name="user-name" placeholder="Username">
                                                 <input type="password" name="user-password" placeholder="Password">
                                                 <div class="button-box">
@@ -394,6 +395,7 @@
                                     <div class="login-form-container">
                                         <div class="login-register-form">
                                             <form action="#" method="post">
+                                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                                 <input type="text" name="user-name" placeholder="Username">
                                                 <input type="password" name="user-password" placeholder="Password">
                                                 <input name="user-email" placeholder="Email" type="email">

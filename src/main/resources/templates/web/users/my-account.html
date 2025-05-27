@@ -38,6 +38,7 @@
                                                 <h5>Your Personal Details</h5>
                                             </div>
                                             <form id="updateForm" action="/auth/updateinfor" method="POST">
+                                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                                 <div class="row">
                                                     <input type="hidden" name="userId" th:value="${user.userId}">
                                                     <div class="col-lg-6 col-md-6">
@@ -118,6 +119,7 @@
                                         </div>
                                         <div class="billing-information-wrapper">
                                             <form id="updateAddressForm" action="/auth/updateAddress" method="POST">
+                                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                                 <div class="row">
                                                     <!-- Số nhà/Đường -->
                                                     <div class="col-lg-6 col-md-6">
