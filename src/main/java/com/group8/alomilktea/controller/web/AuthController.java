@@ -178,23 +178,33 @@ public class AuthController {
         return "web/auth/reset-password";
     }
 
+
     @PostMapping("/auth/reset-password")
     public String processResetPassword(@ModelAttribute("resetPasswordRequest") @Valid ResetPasswordRequest resetPasswordRequest, BindingResult result, Model model, HttpServletRequest request) {
-        User user = userService.findByEmail(resetPasswordRequest.getEmail()).orElse(null);
-
-        if (user == null) {
-            // Handle invalid email
-            result.rejectValue("email", null, "Invalid email");
+        // Lấy thông tin người dùng hiện tại từ SecurityContext
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User userCurrent = userService.findByUserName(auth.getName()).orElse(null);
+        String currentUserEmail = userCurrent.getEmail();
+        log.info("curren email: "+ currentUserEmail);
+        // Kiểm tra email trong yêu cầu có khớp với email của người dùng đã đăng nhập
+        if (currentUserEmail != null && !currentUserEmail.equals(resetPasswordRequest.getEmail())) {
+            result.rejectValue("email", null, "Bạn không có quyền đặt lại mật khẩu cho email này");
             return "web/auth/reset-password";
         }
+
+        User user = userService.findByEmail(resetPasswordRequest.getEmail()).orElse(null);
+        log.info("curren user: "+ user);
+        if (user == null) {
+            result.rejectValue("email", null, "Email không tồn tại");
+            return "web/auth/reset-password";
+        }
+
         String randomCode = email.getRandom();
         user.setCode(randomCode);
         email.sendEmail(user);
         userService.save(user);
 
-
         request.getSession().setAttribute("resetPasswordRequest", resetPasswordRequest);
-
         return "redirect:/auth/enter-verification-code";
     }
 
@@ -211,7 +221,8 @@ public class AuthController {
             result.rejectValue("email", null, "Invalid email");
             return "web/auth/reset-password";
         }
-
+        log.info("entering verification code" + resetPasswordRequest.getCode());
+        log.info("entering verification code user"+ user.getCode());
         // Check if the entered code matches the generated code
         if (resetPasswordRequest.getCode().equals(user.getCode())) {
             return "redirect:/auth/enter-new-password";

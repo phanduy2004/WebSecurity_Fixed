@@ -62,6 +62,11 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	@Override
+	public Optional<User> findByUserName(String userName) {
+		return userRepository.findByUsername(userName);
+	}
+
+	@Override
 	public Long findShipCIdByUser(String email) {
 		return userRepository.findShipCIdByUser(email);
 	}
