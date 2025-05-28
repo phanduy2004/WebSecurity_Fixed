@@ -254,10 +254,52 @@
     model.addAttribute("message", "Delete success");
     return "redirect:/manager/product/list";
     }
-        @GetMapping("/top-selling")
-        public String getTopSellingProducts(Model model) {
-            List<BestSellingProductDTO> topProducts = productService.getTop6BestSellingProducts();
-            model.addAttribute("topProducts", topProducts);
-            return "top-selling-products";
-        }
+    @GetMapping("/top-selling")
+    public String getTopSellingProducts(Model model) {
+        List<BestSellingProductDTO> topProducts = productService.getTop6BestSellingProducts();
+        model.addAttribute("topProducts", topProducts);
+        return "top-selling-products";
     }
+
+    @GetMapping("/search")
+    public String searchProductList(
+            ModelMap model,
+            @RequestParam(name = "keyword") String keyword,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
+
+        Page<Product> productPage = productService.searchByName(keyword, PageRequest.of(page, size));
+        List<Product> products = productPage.getContent();
+
+        Map<Integer, String> productCategoryMap = products.stream()
+                .collect(Collectors.toMap(
+                        Product::getProId,
+                        product -> {
+                            String categoryName = productService.getCategoryNameByProductId(product.getProId());
+                            return categoryName != null ? categoryName : "No Category";
+                        }));
+
+        Map<Integer, String> productPromotionMap = products.stream()
+                .collect(Collectors.toMap(
+                        Product::getProId,
+                        product -> {
+                            String promotionName = productService.getPromotionNameByProductId(product.getProId());
+                            return promotionName != null ? promotionName : "No Promotion";
+                        }));
+
+        model.addAttribute("products", products);
+        model.addAttribute("productCategoryMap", productCategoryMap);
+        model.addAttribute("productPromotionMap", productPromotionMap);
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", productPage.getTotalPages());
+        model.addAttribute("totalItems", productPage.getTotalElements());
+        model.addAttribute("pageSize", size);
+        model.addAttribute("keyword", keyword);
+
+        return "manager/products/apps-ecommerce-product-list"; // Dùng lại view list hoặc view search riêng
+    }
+
+}
+
+

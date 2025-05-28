@@ -8,8 +8,11 @@ import com.group8.alomilktea.repository.BestSellingProductDTO;
 import com.group8.alomilktea.repository.ProductRepository;
 import com.group8.alomilktea.repository.OrderDetailRepository;
 import com.group8.alomilktea.service.IProductService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,10 @@ import java.util.Optional;
 
 @Service
 public class ProductService implements IProductService {
+
+    @Autowired
+    private EntityManager entityManager;
+
     @Autowired
     private ProductRepository repo;
 
@@ -111,6 +118,10 @@ public class ProductService implements IProductService {
         return orderDetailRepository.findTop6BestSellingProducts();
     }
 
+    @Override
+    public Page<Product> searchByName(String keyword, Pageable pageable) {
+        return repo.findByNameContainingIgnoreCase(keyword, pageable);
+    }
 
 }
 
