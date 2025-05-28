@@ -126,6 +126,11 @@ public class SecurityConfiguration {
                         .maximumSessions(1)
                         .expiredUrl("/")
                         .maxSessionsPreventsLogin(true)
+                )
+                .headers(headers -> headers
+                        .contentSecurityPolicy(csp -> csp
+                                .policyDirectives("default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self';")
+                        )
                 );
 
         return httpSecurity.build();
