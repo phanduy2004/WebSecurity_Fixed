@@ -94,11 +94,11 @@
                             </div>
                         </div>
                         <form action="/auth/enter-new-password" method="POST">
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <h5 class="panel-title">
                                         <span>2</span>
-                                        <!-- Sử dụng JavaScript để chuyển hướng khi nhấn vào liên kết -->
                                         <a href="#" onclick="this.closest('form').submit();">Change your password</a>
                                     </h5>
                                 </div>

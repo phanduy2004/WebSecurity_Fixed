@@ -40,7 +40,6 @@ server:
     include-message: never
     include-binding-errors: never
 
-
 storage:
   location: C:\\uploads
 
