@@ -1,47 +1,41 @@
 package com.group8.alomilktea.vnpay;
 
-
 import com.group8.alomilktea.config.payment.VNPAYConfig;
 import com.group8.alomilktea.utils.VNPayUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.Map;
+import java.util.UUID; // For unique transaction reference
 
 @Service
 @RequiredArgsConstructor
 public class PaymentService {
     private final VNPAYConfig vnPayConfig;
-    public long amount =0;
-    public String fullAddress;
-    public String shipingid;
-    public PaymentDTO.VNPayResponse createVnPayPayment(HttpServletRequest request) {
-        String amountParam = request.getParameter("grandTotalAmount");
-        String province = request.getParameter("province");
-        String city = request.getParameter("city");
-        String commune = request.getParameter("commune");
-        String address = request.getParameter("address");
-        shipingid = request.getParameter("shippingMethodId");
-        System.out.println("đuyeptrai" +shipingid);
-        // Xây dựng địa chỉ đầy đủ
-        fullAddress = address + ", " + commune + ", " + city + ", " + province;
-        if (amountParam == null || amountParam.isEmpty()) {
-            throw new IllegalArgumentException("Amount parameter is required and cannot be null or empty");
+    // Loại bỏ các biến instance: amount, fullAddress, shipingid
+
+    public PaymentDTO.VNPayResponse createVnPayPayment(HttpServletRequest request,
+                                                       Double serverCalculatedTotalAmount,
+                                                       String orderTxnRef, // Mã giao dịch đơn hàng duy nhất
+                                                       String orderInfo) { // Thông tin đơn hàng
+        if (serverCalculatedTotalAmount == null || serverCalculatedTotalAmount <= 0) {
+            throw new IllegalArgumentException("Amount must be greater than zero.");
         }
 
-        double amountDouble = Double.parseDouble(amountParam);
-        amount = (long) (amountDouble * 100);
-        System.out.println("amount is " + amount);
+        long amountInCents = (long) (serverCalculatedTotalAmount * 100);
 
-        String bankCode = request.getParameter("bankCode");
+        String bankCode = request.getParameter("bankCode"); // Bank code có thể vẫn lấy từ request
         Map<String, String> vnpParamsMap = vnPayConfig.getVNPayConfig();
-        vnpParamsMap.put("vnp_Amount", String.valueOf(amount));
+
+        // Ghi đè/thêm các giá trị cần thiết
+        vnpParamsMap.put("vnp_Amount", String.valueOf(amountInCents));
+        vnpParamsMap.put("vnp_IpAddr", VNPayUtil.getIpAddress(request));
+        vnpParamsMap.put("vnp_OrderInfo", orderInfo); // Sử dụng thông tin đơn hàng truyền vào
+        vnpParamsMap.put("vnp_TxnRef", orderTxnRef); // Sử dụng mã giao dịch duy nhất
+
         if (bankCode != null && !bankCode.isEmpty()) {
             vnpParamsMap.put("vnp_BankCode", bankCode);
         }
-        vnpParamsMap.put("vnp_IpAddr", VNPayUtil.getIpAddress(request));
-        //build query url
         String queryUrl = VNPayUtil.getPaymentURL(vnpParamsMap, true);
         String hashData = VNPayUtil.getPaymentURL(vnpParamsMap, false);
         String vnpSecureHash = VNPayUtil.hmacSHA512(vnPayConfig.getSecretKey(), hashData);

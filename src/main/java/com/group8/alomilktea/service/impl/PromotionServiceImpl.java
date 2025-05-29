@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PromotionServiceImpl implements IPromotionService {
@@ -37,5 +38,9 @@ public class PromotionServiceImpl implements IPromotionService {
     @Override
     public Page<Promotion> findAll(Pageable pageable) {
         return repo.findAll(pageable);
+    }
+    @Override
+    public Optional<Promotion> findByName(String name) {
+        return repo.findByName(name);
     }
 }

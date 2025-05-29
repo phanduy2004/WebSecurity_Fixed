@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IPromotionService {
 
@@ -17,5 +18,5 @@ public interface IPromotionService {
     void deleteById(Integer id);
 
     Page<Promotion> findAll(Pageable pageable);
-
+    Optional<Promotion> findByName(String name);
 }

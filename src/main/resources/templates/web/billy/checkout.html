@@ -327,77 +327,124 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <script>
-                                        function handlePayment() {
-                                            // Lấy giá trị tổng thanh toán
-                                            const grandTotal = document.getElementById("grandTotalAmount").innerText.trim();
-                                            var province = document.getElementById('province').value;
-                                            var city = document.getElementById('city').value;
-                                            var commune = document.getElementById('commune').value;
-                                            var address = document.getElementById('address').value;
-                                            var shippingMethodId = document.getElementById('selectedShippingMethodId').value;
-                                            console.log("hello " + shippingMethodId)
-                                            // K    iểm tra nếu giá trị grandTotal không hợp lệ
-                                            if (!grandTotal || isNaN(grandTotal)) {
-                                                alert("Invalid grand total amount.");
-                                                return;
-                                            }
-                                            // Lấy giá trị của phương thức thanh toán đã chọn
-                                            const paymentMethod = document.querySelector('input[name="payment-method"]:checked');
-                                            if (!paymentMethod) {
-                                                alert("Please select a payment method.");
-                                                return;
-                                            }
+                                <script>
+                                    function handlePayment() {
+                                        // const grandTotal = document.getElementById("grandTotalAmount").innerText.trim();
+                                        var province = document.getElementById('province').value;
+                                        var city = document.getElementById('city').value;
+                                        var commune = document.getElementById('commune').value;
+                                        var address = document.getElementById('address').value;
+                                        var shippingMethodId = document.getElementById('selectedShippingMethodId').value;
 
-                                            // Xử lý theo phương thức thanh toán
-                                            switch (paymentMethod.value) {
-                                                case 'vnpay':
-                                                    // Gửi yêu cầu thanh toán VNPay
-                                                    fetch(`/api/v1/payment/vn-pay?grandTotalAmount=${encodeURIComponent(grandTotal)}&province=${encodeURIComponent(province)}&city=${encodeURIComponent(city)}&commune=${encodeURIComponent(commune)}&address=${encodeURIComponent(address)}&shippingMethodId=${encodeURIComponent(shippingMethodId)}`, {
-                                                        method: 'GET'
-                                                    })
+                                        // Lấy promotion code nếu có (ví dụ từ một input có id="promotionCodeInput")
+                                        var promotionCodeInput = document.getElementById('appliedPromotionCode'); // Giả sử bạn có input ẩn này
+                                        var promotionCode = promotionCodeInput ? promotionCodeInput.value : "";
 
-                                                            .then(response => response.json())
-                                                        .then(data => {
-                                                            console.log(data.code + "lo cc");  // Log để kiểm tra đối tượng dữ liệu
-                                                            console.log(data.data.ketao + " hêllo");
-                                                            if (data.data && data.data.ketao) {
-                                                                window.location.href = data.data.ketao;  // Redirect đến VNPay
-                                                            } else {
-                                                                alert("VNPay payment failed: " + (data.message || "Unknown error."));
-                                                            }
-                                                        })
-                                                        .catch(error => {
-                                                            console.error("Error during VNPay payment:", error);
-                                                            alert("An error occurred during VNPay payment.");
-                                                        });
-                                                    break;
-                                                case 'cash-on-delivery':
 
-                                                    // Gửi yêu cầu backend để xử lý thanh toán Cash on Delivery
-                                                    fetch(`/api/v1/payment/cash-on-delivery?grandTotalAmount=${encodeURIComponent(grandTotal)}&province=${encodeURIComponent(province)}&city=${encodeURIComponent(city)}&commune=${encodeURIComponent(commune)}&address=${encodeURIComponent(address)}&shippingMethodId=${encodeURIComponent(shippingMethodId)}`, {
-                                                        method: 'GET',
-                                                    })
-                                                        .then(response => response.text())  // Use response.text() to handle HTML response
-                                                        .then(html => {
-                                                            // Display the HTML content returned by the backend (for confirmation)
-                                                            document.body.innerHTML = html;  // Replace the entire page content with the response from backend
-                                                        })
-                                                        .catch(error => {
-                                                            console.error("Error during Cash on Delivery payment:", error);
-                                                            alert("An error occurred during Cash on Delivery payment.");
-                                                        });
-                                                    break;
-                                                case 'momo':
-                                                    // Chuyển hướng đến trang thanh toán MoMo
-                                                    alert("Momo Payment selected. Proceeding with order.");
-                                                    window.location.href = "/momo-payment";
-                                                    break;
-                                                default:
-                                                    alert("Invalid payment method selected.");
-                                            }
+                                        const paymentMethod = document.querySelector('input[name="payment-method"]:checked');
+                                        if (!paymentMethod) {
+                                            alert("Please select a payment method.");
+                                            return;
                                         }
-                                    </script>
+
+                                        let paymentUrlParams = `?shippingMethodId=${encodeURIComponent(shippingMethodId)}&province=${encodeURIComponent(province)}&city=${encodeURIComponent(city)}&commune=${encodeURIComponent(commune)}&address=${encodeURIComponent(address)}`;
+                                        if (promotionCode) {
+                                            paymentUrlParams += `&promotionCode=${encodeURIComponent(promotionCode)}`;
+                                        }
+
+                                        switch (paymentMethod.value) {
+                                            case 'vnpay':
+                                                fetch(`/api/v1/payment/vn-pay${paymentUrlParams}`, {
+                                                    method: 'GET'
+                                                })
+                                                    .then(response => response.json())
+                                                    .then(data => {
+                                                        if (data.data && data.data.ketao) { // "ketao" nên đổi tên thành paymentUrl
+                                                            window.location.href = data.data.ketao;
+                                                        } else {
+                                                            alert("VNPay payment initiation failed: " + (data.message || "Unknown error."));
+                                                        }
+                                                    })
+                                                    .catch(error => {
+                                                        console.error("Error during VNPay payment initiation:", error);
+                                                        alert("An error occurred during VNPay payment initiation.");
+                                                    });
+                                                break;
+                                            case 'cash-on-delivery':
+                                                fetch(`/api/v1/payment/cash-on-delivery${paymentUrlParams}`, {
+                                                    method: 'GET',
+                                                })
+                                                    .then(response => response.text())
+                                                    .then(html => {
+                                                        document.body.innerHTML = html;
+                                                    })
+                                                    .catch(error => {
+                                                        console.error("Error during Cash on Delivery payment:", error);
+                                                        alert("An error occurred during Cash on Delivery payment.");
+                                                    });
+                                                break;
+                                            default:
+                                                alert("Invalid payment method selected.");
+                                        }
+                                    }
+
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        let subtotal = parseFloat(document.getElementById('totalAmount').textContent) || 0;
+                                        let shippingCost = parseFloat(document.getElementById('shippingAmount').textContent) || 0;
+                                        let discount = parseFloat(document.getElementById('discountAmount').textContent) || 0;
+                                        let appliedPromoCode = ""; // Biến lưu mã giảm giá đã áp dụng
+
+                                        const grandTotalAmountElement = document.getElementById('grandTotalAmount');
+                                        const shippingAmountElement = document.getElementById('shippingAmount');
+                                        const discountAmountElement = document.getElementById('discountAmount');
+                                        const selectedShippingMethodIdElement = document.getElementById('selectedShippingMethodId');
+
+                                        // Thêm input ẩn để lưu mã khuyến mãi nếu cần gửi đi
+                                        let promotionInput = document.getElementById('appliedPromotionCode');
+                                        if (!promotionInput) {
+                                            promotionInput = document.createElement('input');
+                                            promotionInput.type = 'hidden';
+                                            promotionInput.id = 'appliedPromotionCode';
+                                            promotionInput.name = 'promotionCode';
+                                            // Thêm vào form hoặc một nơi thích hợp trong DOM
+                                            document.querySelector('.checkout-wrapper').appendChild(promotionInput);
+                                        }
+
+
+                                        function calculateGrandTotal() {
+                                            const grandTotal = subtotal + shippingCost - discount;
+                                            grandTotalAmountElement.textContent = grandTotal.toFixed(2);
+                                        }
+
+                                        $('#shippingModal .select-shipping').off('click').on('click', function (event) {
+                                            event.preventDefault();
+                                            const row = $(this).closest('tr');
+                                            const shippingPrice = row.data('shipping-price');
+                                            const shippingMethodId = row.data('shipping-id');
+
+                                            shippingCost = parseFloat(shippingPrice) || 0;
+                                            selectedShippingMethodIdElement.value = shippingMethodId; // Cập nhật ID vào input ẩn
+                                            shippingAmountElement.textContent = shippingCost.toFixed(2);
+                                            calculateGrandTotal();
+                                            $('#shippingModal').modal('hide');
+                                        });
+
+                                        $('#discountModal .apply-discount').off('click').on('click', function (event) {
+                                            event.preventDefault();
+                                            const row = $(this).closest('tr');
+                                            const discountRate = parseFloat(row.data('rate')) || 0;
+                                            appliedPromoCode = row.data('promotion-id'); // Hoặc mã code nếu bạn có
+
+                                            discount = subtotal * (discountRate / 100);
+                                            discountAmountElement.textContent = discount.toFixed(2);
+                                            promotionInput.value = appliedPromoCode; // Lưu mã khuyến mãi đã áp dụng
+                                            calculateGrandTotal();
+                                            $('#discountModal').modal('hide');
+                                        });
+
+                                        calculateGrandTotal();
+                                    });
+                                </script>
                                 </div>
                             </div>
                         </div>

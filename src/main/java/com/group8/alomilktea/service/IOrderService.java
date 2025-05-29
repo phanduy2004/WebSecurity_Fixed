@@ -1,32 +1,30 @@
 package com.group8.alomilktea.service;
 
 import com.group8.alomilktea.entity.Order;
+import com.group8.alomilktea.entity.User; // Cần import User
+import com.group8.alomilktea.entity.ShipmentCompany; // Cần import ShipmentCompany
+import com.group8.alomilktea.entity.Promotion; // Cần import Promotion
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Map;
 
 public interface IOrderService {
+    // ... các phương thức hiện có ...
+
+    Order findById(Integer id);
     Page<Order> getAll(Integer pageNo);
-    Page<Order> getOderByStatus(Integer pageNo, String status,Long shipId);
+    Page<Order> getOderByStatus(Integer pageNo, String status, Long shipId);
     void updateOrderState(Integer orderId, String newState);
     void deleteById(Integer id);
     List<Order> findOder(Integer userId);
     long count();
     List<Order> findAll();
-
-    Order findById(Integer id);
     Page<Order> findAll(Pageable pageable);
-
     <S extends Order> S save(S entity);
     int reOnCurrentMonth();
-
     int reOnCurrentYear();
-
     int reOnCurrentQuarter();
-
     float rateCom();
     List<Integer> getMonthlyTotal();
     List<Integer> getQuarterTotal();
@@ -35,12 +33,12 @@ public interface IOrderService {
     long countCancelOrders();
     long countShippingOrders();
     int getCompletedOrderRate();
-
-    public int countByStatus(String status);
-    public int countByStatusAndShip(String status, Long shipId);
+    int countByStatus(String status);
+    int countByStatusAndShip(String status, Long shipId);
     long countbyShipID(Long ShipId);
     long countOrder();
+    int updateStatus(Long orderId, String status);
 
-    int updateStatus( Long orderId,  String status);
-
+    // Phương thức mới để tính tổng tiền đơn hàng từ server
+    Double calculateGrandTotalFromServer(User user, Integer shipmentCompanyId, String promotionCode);
 }

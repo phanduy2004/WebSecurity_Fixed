@@ -1,0 +1,223 @@
+2025-05-28 11:43:31 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-05-28 11:43:31 [restartedMain] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2025-05-28 11:44:39 [https-jsse-nio-8888-exec-11] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: tom, IP: 127.0.0.1, time: 2025-05-28T11:44:39.389353, reason: Bad credentials
+2025-05-28 11:44:39 [https-jsse-nio-8888-exec-1] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: tom, IP: 127.0.0.1, time: 2025-05-28T11:44:39.602592, reason: Bad credentials
+2025-05-28 11:44:39 [https-jsse-nio-8888-exec-6] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: tom, IP: 127.0.0.1, time: 2025-05-28T11:44:39.814949700, reason: Bad credentials
+2025-05-28 11:44:40 [https-jsse-nio-8888-exec-7] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: tom, IP: 127.0.0.1, time: 2025-05-28T11:44:40.112368200, reason: Bad credentials
+2025-05-28 11:44:40 [https-jsse-nio-8888-exec-2] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: tom, IP: 127.0.0.1, time: 2025-05-28T11:44:40.419738, reason: Bad credentials
+2025-05-28 11:44:40 [https-jsse-nio-8888-exec-8] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: tom, IP: 127.0.0.1, time: 2025-05-28T11:44:40.739781900, reason: Bad credentials
+2025-05-28 11:44:41 [https-jsse-nio-8888-exec-10] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: tom, IP: 127.0.0.1, time: 2025-05-28T11:44:41.168884800, reason: Bad credentials
+2025-05-28 11:44:41 [https-jsse-nio-8888-exec-3] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: tom, IP: 127.0.0.1, time: 2025-05-28T11:44:41.636452800, reason: Bad credentials
+2025-05-28 11:44:42 [https-jsse-nio-8888-exec-4] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: tom, IP: 127.0.0.1, time: 2025-05-28T11:44:42.166843800, reason: Bad credentials
+2025-05-28 11:49:00 [https-jsse-nio-8888-exec-9] INFO  c.g.a.c.s.CustomAuthenticationSuccessHandler - LOGIN SUCCESS - username: ledaonhansam, IP: 0:0:0:0:0:0:0:1, time: 2025-05-28T11:49:00.237129200
+2025-05-28 11:51:23 [https-jsse-nio-8888-exec-3] INFO  c.g.a.c.s.CustomAuthenticationSuccessHandler - LOGIN SUCCESS - username: ledaonhansam, IP: 127.0.0.1, time: 2025-05-28T11:51:23.794024400
+2025-05-28 11:58:48 [https-jsse-nio-8888-exec-15] INFO  c.g.a.c.s.CustomAuthenticationSuccessHandler - LOGIN SUCCESS - username: ledaonhansam, IP: 127.0.0.1, time: 2025-05-28T11:58:48.466764900
+2025-05-28 12:10:56 [https-jsse-nio-8888-exec-5] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: tom, IP: 127.0.0.1, time: 2025-05-28T12:10:56.802609700, reason: Bad credentials
+2025-05-28 12:10:56 [https-jsse-nio-8888-exec-14] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: tom, IP: 127.0.0.1, time: 2025-05-28T12:10:56.970364900, reason: Bad credentials
+2025-05-28 12:10:57 [https-jsse-nio-8888-exec-16] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: tom, IP: 127.0.0.1, time: 2025-05-28T12:10:57.178899400, reason: Bad credentials
+2025-05-28 12:10:57 [https-jsse-nio-8888-exec-8] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: tom, IP: 127.0.0.1, time: 2025-05-28T12:10:57.450662300, reason: Bad credentials
+2025-05-28 12:10:57 [https-jsse-nio-8888-exec-10] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: tom, IP: 127.0.0.1, time: 2025-05-28T12:10:57.725420700, reason: Bad credentials
+2025-05-28 12:10:58 [https-jsse-nio-8888-exec-4] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: tom, IP: 127.0.0.1, time: 2025-05-28T12:10:58.102100200, reason: Bad credentials
+2025-05-28 12:10:58 [https-jsse-nio-8888-exec-11] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: tom, IP: 127.0.0.1, time: 2025-05-28T12:10:58.484012, reason: Bad credentials
+2025-05-28 12:10:58 [https-jsse-nio-8888-exec-13] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: tom, IP: 127.0.0.1, time: 2025-05-28T12:10:58.937015600, reason: Bad credentials
+2025-05-28 12:10:59 [https-jsse-nio-8888-exec-1] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: tom, IP: 127.0.0.1, time: 2025-05-28T12:10:59.451779200, reason: Bad credentials
+2025-05-28 12:11:00 [https-jsse-nio-8888-exec-5] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: tom, IP: 127.0.0.1, time: 2025-05-28T12:11:00.002883600, reason: Bad credentials
+2025-05-28 12:11:00 [https-jsse-nio-8888-exec-3] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: tom, IP: 127.0.0.1, time: 2025-05-28T12:11:00.607672900, reason: Bad credentials
+2025-05-28 12:11:01 [https-jsse-nio-8888-exec-16] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: tom, IP: 127.0.0.1, time: 2025-05-28T12:11:01.270514300, reason: Bad credentials
+2025-05-28 12:17:41 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-05-28 12:17:41 [restartedMain] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2025-05-28 12:17:45 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-05-28 12:17:45 [restartedMain] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2025-05-28 12:17:54 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-05-28 12:17:54 [restartedMain] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2025-05-28 12:17:57 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-05-28 12:17:57 [restartedMain] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2025-05-28 12:18:23 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-05-28 12:18:23 [restartedMain] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2025-05-28 12:18:27 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-05-28 12:18:27 [restartedMain] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2025-05-28 12:18:30 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Found 2 AuthenticationProvider beans, with names [customAuthenticationProvider, authenticationProvider]. Global Authentication Manager will not be configured with AuthenticationProviders. Consider publishing a single AuthenticationProvider bean, or wiring your Providers directly using the DSL.
+2025-05-28 12:18:30 [restartedMain] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Found 2 UserDetailsService beans, with names [authHelper, userDetailsService]. Global Authentication Manager will not use a UserDetailsService for username/password login. Consider publishing a single UserDetailsService bean.
+2025-05-28 12:57:56 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-05-28 12:57:56 [restartedMain] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2025-05-28 13:01:25 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-05-28 13:01:25 [restartedMain] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2025-05-28 16:22:27 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-05-28 16:22:27 [restartedMain] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2025-05-28 16:22:45 [https-jsse-nio-8888-exec-8] INFO  c.g.a.c.s.CustomAuthenticationSuccessHandler - LOGIN SUCCESS - username: ledaonhansam, IP: 0:0:0:0:0:0:0:1, time: 2025-05-28T16:22:45.402254500
+2025-05-28 16:23:56 [https-jsse-nio-8888-exec-11] INFO  c.g.a.c.s.CustomAuthenticationSuccessHandler - LOGIN SUCCESS - username: ledaonhansam, IP: 127.0.0.1, time: 2025-05-28T16:23:56.165847600
+2025-05-28 16:38:39 [https-jsse-nio-8888-exec-21] INFO  c.g.a.c.s.CustomLogoutSuccessHandler - LOGOUT - username: ledaonhansam, IP: 127.0.0.1, time: 2025-05-28T16:38:39.947556300
+2025-05-28 18:00:55 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-05-28 18:00:55 [restartedMain] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2025-05-28 18:02:22 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-05-28 18:02:22 [restartedMain] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2025-05-28 18:02:44 [https-jsse-nio-8888-exec-5] INFO  c.g.a.c.s.CustomLogoutSuccessHandler - LOGOUT - username: Anonymous, IP: 0:0:0:0:0:0:0:1, time: 2025-05-28T18:02:44.595624200
+2025-05-28 18:02:54 [https-jsse-nio-8888-exec-4] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: nguyengiakhang116@gmail.com, IP: 0:0:0:0:0:0:0:1, time: 2025-05-28T18:02:54.037265900, reason: Bad credentials
+2025-05-28 18:03:00 [https-jsse-nio-8888-exec-6] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: nguyengiakhang116@gmail.com, IP: 0:0:0:0:0:0:0:1, time: 2025-05-28T18:03:00.537853100, reason: Bad credentials
+2025-05-28 18:03:07 [https-jsse-nio-8888-exec-10] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: nguyengiakhang116@gmail.com, IP: 0:0:0:0:0:0:0:1, time: 2025-05-28T18:03:07.646497600, reason: Bad credentials
+2025-05-28 18:03:14 [https-jsse-nio-8888-exec-2] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: nguyengiakhang116@gmail.com, IP: 0:0:0:0:0:0:0:1, time: 2025-05-28T18:03:14.363826700, reason: Bad credentials
+2025-05-28 18:03:20 [https-jsse-nio-8888-exec-2] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: nguyengiakhang116@gmail.com, IP: 0:0:0:0:0:0:0:1, time: 2025-05-28T18:03:20.427063500, reason: Bad credentials
+2025-05-28 18:03:25 [https-jsse-nio-8888-exec-4] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: nguyengiakhang116@gmail.com, IP: 0:0:0:0:0:0:0:1, time: 2025-05-28T18:03:25.872663200, reason: Bad credentials
+2025-05-28 18:03:25 [https-jsse-nio-8888-exec-4] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - User account nguyengiakhang116@gmail.com locked due to 5 failed login attempts.
+2025-05-28 18:03:38 [https-jsse-nio-8888-exec-10] ERROR o.s.s.w.a.UsernamePasswordAuthenticationFilter - An internal error occurred while trying to authenticate the user.
+org.springframework.security.authentication.InternalAuthenticationServiceException: User is not enabled
+	at org.springframework.security.authentication.dao.DaoAuthenticationProvider.retrieveUser(DaoAuthenticationProvider.java:122)
+	at org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider.authenticate(AbstractUserDetailsAuthenticationProvider.java:133)
+	at org.springframework.security.authentication.ProviderManager.authenticate(ProviderManager.java:182)
+	at org.springframework.security.authentication.ProviderManager.authenticate(ProviderManager.java:201)
+	at org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.attemptAuthentication(UsernamePasswordAuthenticationFilter.java:85)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:231)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:221)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:195)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:230)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.springframework.security.authentication.DisabledException: User is not enabled
+	at com.group8.alomilktea.config.security.AuthHelper.loadUserByUsername(AuthHelper.java:40)
+	at org.springframework.security.authentication.dao.DaoAuthenticationProvider.retrieveUser(DaoAuthenticationProvider.java:107)
+	... 62 common frames omitted
+2025-05-28 18:03:38 [https-jsse-nio-8888-exec-10] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: nguyengiakhang116@gmail.com, IP: 0:0:0:0:0:0:0:1, time: 2025-05-28T18:03:38.376671300, reason: User is not enabled
+2025-05-28 18:03:38 [https-jsse-nio-8888-exec-10] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - Login attempt for already locked account: nguyengiakhang116@gmail.com from IP: 0:0:0:0:0:0:0:1
+2025-05-28 18:03:44 [https-jsse-nio-8888-exec-8] ERROR o.s.s.w.a.UsernamePasswordAuthenticationFilter - An internal error occurred while trying to authenticate the user.
+org.springframework.security.authentication.InternalAuthenticationServiceException: User is not enabled
+	at org.springframework.security.authentication.dao.DaoAuthenticationProvider.retrieveUser(DaoAuthenticationProvider.java:122)
+	at org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider.authenticate(AbstractUserDetailsAuthenticationProvider.java:133)
+	at org.springframework.security.authentication.ProviderManager.authenticate(ProviderManager.java:182)
+	at org.springframework.security.authentication.ProviderManager.authenticate(ProviderManager.java:201)
+	at org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.attemptAuthentication(UsernamePasswordAuthenticationFilter.java:85)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:231)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:221)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:195)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:230)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.springframework.security.authentication.DisabledException: User is not enabled
+	at com.group8.alomilktea.config.security.AuthHelper.loadUserByUsername(AuthHelper.java:40)
+	at org.springframework.security.authentication.dao.DaoAuthenticationProvider.retrieveUser(DaoAuthenticationProvider.java:107)
+	... 62 common frames omitted
+2025-05-28 18:03:44 [https-jsse-nio-8888-exec-8] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - LOGIN FAILURE - username: nguyengiakhang116@gmail.com, IP: 0:0:0:0:0:0:0:1, time: 2025-05-28T18:03:44.461074500, reason: User is not enabled
+2025-05-28 18:03:44 [https-jsse-nio-8888-exec-8] WARN  c.g.a.c.s.CustomAuthenticationFailureHandler - Login attempt for already locked account: nguyengiakhang116@gmail.com from IP: 0:0:0:0:0:0:0:1
+2025-05-28 18:28:22 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-05-28 18:28:22 [restartedMain] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2025-05-28 18:29:46 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-05-28 18:29:46 [restartedMain] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2025-05-28 18:30:57 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-05-28 18:30:57 [restartedMain] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2025-05-28 18:31:58 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-05-28 18:31:58 [restartedMain] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2025-05-28 18:38:04 [https-jsse-nio-8888-exec-8] INFO  c.g.a.c.s.CustomAuthenticationSuccessHandler - LOGIN SUCCESS - username: ledaonhansam, IP: 127.0.0.1, time: 2025-05-28T18:38:04.876303400
+2025-05-28 18:38:06 [https-jsse-nio-8888-exec-1] INFO  c.g.a.c.s.CustomLogoutSuccessHandler - LOGOUT - username: ledaonhansam, IP: 127.0.0.1, time: 2025-05-28T18:38:06.914010800
+2025-05-28 18:38:16 [https-jsse-nio-8888-exec-6] INFO  c.g.a.c.s.CustomAuthenticationSuccessHandler - LOGIN SUCCESS - username: ledaonhansam, IP: 127.0.0.1, time: 2025-05-28T18:38:16.276099
+2025-05-28 19:02:14 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-05-28 19:02:14 [restartedMain] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2025-05-28 19:03:16 [https-jsse-nio-8888-exec-4] INFO  c.g.a.c.s.CustomAuthenticationSuccessHandler - LOGIN SUCCESS - username: ledaonhansam, IP: 127.0.0.1, time: 2025-05-28T19:03:16.018076700
+2025-05-28 19:04:16 [https-jsse-nio-8888-exec-15] INFO  c.g.a.c.s.CustomAuthenticationSuccessHandler - LOGIN SUCCESS - username: ledaonhansam, IP: 0:0:0:0:0:0:0:1, time: 2025-05-28T19:04:16.280511800
+2025-05-28 19:04:38 [https-jsse-nio-8888-exec-5] INFO  c.g.a.c.s.CustomAuthenticationSuccessHandler - LOGIN SUCCESS - username: ledaonhansam, IP: 0:0:0:0:0:0:0:1, time: 2025-05-28T19:04:38.964920500
+2025-05-28 19:07:21 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-05-28 19:07:21 [restartedMain] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2025-05-28 19:13:54 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-05-28 19:13:54 [restartedMain] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
