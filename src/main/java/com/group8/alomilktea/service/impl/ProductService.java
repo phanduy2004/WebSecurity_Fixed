@@ -111,6 +111,12 @@ public class ProductService implements IProductService {
         return orderDetailRepository.findTop6BestSellingProducts();
     }
 
+    @Override
+    public Page<Product> searchByName(String keyword, Pageable pageable) {
+        return repo.findByNameContainingIgnoreCase(keyword, pageable);
+    }
+
+
 
 }
 
