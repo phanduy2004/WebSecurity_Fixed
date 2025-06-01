@@ -80,7 +80,6 @@ public class OrderServiceImpl implements IOrderService {
             Optional<Promotion> optPromotion = promotionService.findByName(promotionName); // Sửa: Sử dụng Optional
             if (optPromotion.isPresent()) {
                 Promotion promotion = optPromotion.get();
-                // Kiểm tra thêm is_active và validity
                 boolean isActive = promotion.getIsActive() != null && promotion.getIsActive() == 1;
                 boolean isValidDate = promotion.getValidity() == null || promotion.getValidity().after(new Date()); // java.util.Date
 
@@ -89,6 +88,7 @@ public class OrderServiceImpl implements IOrderService {
                 }
             }
         }
+
         return productsTotal + shippingCost - discountAmount;
     }
 

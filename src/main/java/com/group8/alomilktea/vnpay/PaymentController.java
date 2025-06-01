@@ -50,33 +50,23 @@ public class PaymentController {
         if (user == null) {
             return new ResponseObject<>(HttpStatus.UNAUTHORIZED, "User not logged in", null);
         }
-
         String fullAddress = address + ", " + commune + ", " + city + ", " + province;
         Integer shipIdInt = Integer.parseInt(shippingMethodId);
-
         Double serverCalculatedTotal = orderService.calculateGrandTotalFromServer(user, shipIdInt, promotionCode);
-
         if (serverCalculatedTotal <= 0) {
             return new ResponseObject<>(HttpStatus.BAD_REQUEST, "Invalid order amount or empty cart.", null);
         }
-
         String vnpTxnRef = UUID.randomUUID().toString().replace("-", ""); // Tạo mã giao dịch duy nhất
         String orderInfo = "Thanh toan don hang " + vnpTxnRef + " cho " + user.getEmail();
         try {
             orderInfo = URLEncoder.encode(orderInfo, StandardCharsets.UTF_8.toString());
-        } catch (Exception e) {
-            // Log error
-        }
-
-        // Lưu thông tin cần thiết vào session để xác minh ở callback
+        } catch (Exception e) {}
         HttpSession session = request.getSession();
         session.setAttribute(VNPAY_SESSION_PREFIX + vnpTxnRef + "_TOTAL", serverCalculatedTotal);
         session.setAttribute(VNPAY_SESSION_PREFIX + vnpTxnRef + "_ADDRESS", fullAddress);
         session.setAttribute(VNPAY_SESSION_PREFIX + vnpTxnRef + "_SHIPPING_ID", shipIdInt);
         session.setAttribute(VNPAY_SESSION_PREFIX + vnpTxnRef + "_PROMO", promotionCode);
         session.setAttribute(VNPAY_SESSION_PREFIX + vnpTxnRef + "_USER_ID", user.getUserId());
-
-
         PaymentDTO.VNPayResponse vnPayResponse = paymentService.createVnPayPayment(request, serverCalculatedTotal, vnpTxnRef, orderInfo);
         return new ResponseObject<>(HttpStatus.OK, "Success", vnPayResponse);
     }
@@ -102,18 +92,14 @@ public class PaymentController {
         session.removeAttribute(VNPAY_SESSION_PREFIX + vnp_TxnRef + "_USER_ID");
 
         if (expectedTotal == null || fullAddress == null || shippingId == null || userId == null) {
-            // Thiếu thông tin session, có thể là giao dịch không hợp lệ hoặc session timeout
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("<html><body><h3>Giao dịch không hợp lệ hoặc phiên hết hạn!</h3><a href='/'>Quay lại trang chủ</a></body></html>");
         }
-
         User user = userService.findById(userId);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("<html><body><h3>Người dùng không tồn tại!</h3><a href='/'>Quay lại trang chủ</a></body></html>");
         }
-
-
         if ("00".equals(vnp_ResponseCode)) {
             double vnpAmountProcessed = Double.parseDouble(vnp_AmountStr) / 100.0;
             // So sánh số tiền VNPAY xử lý với số tiền server đã tính toán và lưu trong session
@@ -128,7 +114,6 @@ public class PaymentController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body("<html><body><h3>Giỏ hàng trống! Không thể tạo đơn hàng.</h3><a href='/'>Quay lại trang chủ</a></body></html>");
             }
-
             ShipmentCompany shipment = shipmentCompanyService.findById(shippingId);
             if (shipment == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)

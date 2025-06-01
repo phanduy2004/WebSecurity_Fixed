@@ -56,7 +56,6 @@ public class AuthController {
         if (principal != null) {
             return "redirect:/";
         }
-
         if ("error".equals(message)) {
             if (attemptsStr != null) {
                 try {
