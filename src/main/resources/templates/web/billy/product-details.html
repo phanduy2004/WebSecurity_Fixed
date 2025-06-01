@@ -351,6 +351,8 @@
                         });
                         document.getElementById("submit-rating").addEventListener("click", function (e) {
                             e.preventDefault();
+                            const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+                            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
 
                             // Lấy dữ liệu từ form
                             const formData = new FormData();
@@ -365,6 +367,9 @@
                             // Gửi yêu cầu POST tới API thêm đánh giá
                             fetch("/api/ratings/add", {
                                 method: "POST",
+                                headers: {
+                                    [csrfHeader]: csrfToken // Thêm CSRF Token vào header
+                                },
                                 body: formData // Gửi dữ liệu dưới dạng form data
                             }).then(response => response.text())
                                 .then(data => {
@@ -389,7 +394,7 @@
 </div>
     <!-- Additional product info, description, and related products would go here -->
 
-    <script th:src="@{/assets/js/vendor/jquery-1.12.4.min.js}"></script>
+<script th:src="@{/assets/js/vendor/jquery-3.7.1.min.js}"></script>
     <script th:src="@{/assets/js/popper.js}"></script>
     <script th:src="@{/assets/js/bootstrap.min.js}"></script>
     <script th:src="@{/assets/js/imagesloaded.pkgd.min.js}"></script>

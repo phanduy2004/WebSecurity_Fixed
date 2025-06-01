@@ -1,13 +1,18 @@
 package com.group8.alomilktea.config.security;
 
 import com.group8.alomilktea.common.enums.UserRole;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.authentication.configuration.GlobalAuthenticationConfigurerAdapter;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,15 +20,17 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-// Dòng này không cần thiết nếu bạn khởi tạo trực tiếp và chúng không phải là bean
-// import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-// import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -57,19 +64,24 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/admin/**").hasAuthority(UserRole.ADMIN.getRoleName())
-                        .requestMatchers("/manager/**").hasAuthority(UserRole.MANAGER.getRoleName())
-                        .requestMatchers("/shipper/**").hasAuthority(UserRole.SHIPPER.getRoleName())
-                        .requestMatchers("/cart/**", "/CheckOut/**", "/web/users/**", "/web/product/add-to-cart/**")
-                        .hasAnyAuthority(UserRole.USER.getRoleName(), UserRole.ADMIN.getRoleName())
-                        .requestMatchers("/auth/**", "/api/**", "/ws/**").permitAll() // Cho phép truy cập WebSocket
-                        .anyRequest().permitAll()
-                )
-                .formLogin(form -> form
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
+                //.csrf(AbstractHttpConfigurer::disable)
+                .csrf(Customizer.withDefaults()) // Bật csrf
+                .authorizeHttpRequests(
+                        auth -> auth
+                                .requestMatchers(antMatcher("/admin/**")).hasAnyAuthority(UserRole.ADMIN.getRoleName())
+                                .requestMatchers(antMatcher("/manager/**")).hasAnyAuthority(UserRole.MANAGER.getRoleName())
+                                .requestMatchers(antMatcher("/api/**")).permitAll()
+                                .requestMatchers(antMatcher("/auth/**")).permitAll()
+                                .requestMatchers(antMatcher("/cart/**")).hasAnyAuthority(UserRole.USER.getRoleName(), UserRole.ADMIN.getRoleName())
+                                .requestMatchers(antMatcher("/CheckOut/**")).hasAnyAuthority(UserRole.USER.getRoleName(), UserRole.ADMIN.getRoleName())
+                                .requestMatchers(antMatcher("/web/users/**")).hasAnyAuthority(UserRole.USER.getRoleName(), UserRole.ADMIN.getRoleName())
+                                .requestMatchers(antMatcher("/web/product/add-to-cart/**")).hasAnyAuthority(UserRole.USER.getRoleName(), UserRole.ADMIN.getRoleName())
+                                .requestMatchers(antMatcher("/**")).permitAll()
+                                .requestMatchers(antMatcher("/shipper/**")).hasAnyAuthority(UserRole.SHIPPER.getRoleName())
+                                .anyRequest().authenticated()
+                ).formLogin(login -> login
                         .loginPage("/auth/login")
                         .successHandler(new CustomAuthenticationSuccessHandler())
                         .failureHandler(customAuthenticationFailureHandler) // Sử dụng bean đã inject
@@ -80,6 +92,7 @@ public class SecurityConfiguration {
                         .rememberMeCookieName("tracker-remember-me")
                         .tokenValiditySeconds(5000)
                         .userDetailsService(userDetailsService())
+                        .tokenValiditySeconds(5000)
                 )
                 .logout(logout -> logout
                         .invalidateHttpSession(true)
@@ -97,11 +110,16 @@ public class SecurityConfiguration {
                 )
                 .sessionManagement(session -> session
                         .maximumSessions(1)
-                        .maxSessionsPreventsLogin(true) // Ngăn chặn đăng nhập mới nếu đã đạt max session
-                        .expiredUrl("/") // Chuyển hướng khi session hết hạn do đăng nhập từ nơi khác
+                        .expiredUrl("/")
+                        .maxSessionsPreventsLogin(true)
+                )
+                .headers(headers -> headers
+                        .contentSecurityPolicy(csp -> csp
+                                .policyDirectives("default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self';")
+                        )
                 );
 
-        return http.build();
+        return httpSecurity.build();
     }
 
     @Bean
@@ -114,5 +132,17 @@ public class SecurityConfiguration {
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
+    }
+
+    @Bean
+    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("https://localhost:8888"); // Khớp với server.port
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 }

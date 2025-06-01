@@ -6,6 +6,8 @@
 	<meta charset="utf-8">
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<title>Billy - Food & Drink eCommerce Bootstrap5 Template</title>
+	<meta name="_csrf" th:content="${_csrf.token}"/>
+	<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 	<meta name="description" content="">
 	<meta name="robots" content="noindex, follow" />
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,7 +31,6 @@
 	<!-- Slick Slider CSS -->
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-
 	<!-- jQuery (Slick Slider yêu cầu jQuery) -->
 	<script
 			src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -63,7 +64,7 @@
 
 
 <!-- all js here -->
-<script th:src="@{/assets/js/vendor/jquery-1.12.4.min.js}"></script>
+<script th:src="@{/assets/js/vendor/jquery-3.7.1.min.js}"></script>
 <script th:src="@{/assets/js/popper.js}"></script>
 <script th:src="@{/assets/js/bootstrap.min.js}"></script>
 <script th:src="@{/assets/js/imagesloaded.pkgd.min.js}"></script>

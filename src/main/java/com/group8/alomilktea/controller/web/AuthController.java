@@ -77,6 +77,7 @@ public class AuthController {
         } else if ("locked".equals(message)) {
             model.addAttribute("errorMessage", "Tài khoản của bạn đã bị khóa do nhập sai mật khẩu quá nhiều lần. Vui lòng liên hệ quản trị viên.");
         }
+        request.getSession().removeAttribute("loginStatus");
         return "web/auth/login";
     }
 
@@ -200,10 +201,22 @@ public class AuthController {
         return "web/auth/reset-password";
     }
 
+
     @PostMapping("/auth/reset-password")
     public String processResetPassword(@ModelAttribute("resetPasswordRequest") @Valid ResetPasswordRequest resetPasswordRequest, BindingResult result, Model model, HttpServletRequest request) {
-        User user = userService.findByEmail(resetPasswordRequest.getEmail()).orElse(null);
+        // Lấy thông tin người dùng hiện tại từ SecurityContext
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User userCurrent = userService.findByUserName(auth.getName()).orElse(null);
+        String currentUserEmail = userCurrent.getEmail();
+        log.info("curren email: "+ currentUserEmail);
+        // Kiểm tra email trong yêu cầu có khớp với email của người dùng đã đăng nhập
+        if (currentUserEmail != null && !currentUserEmail.equals(resetPasswordRequest.getEmail())) {
+            result.rejectValue("email", null, "Bạn không có quyền đặt lại mật khẩu cho email này");
+            return "web/auth/reset-password";
+        }
 
+        User user = userService.findByEmail(resetPasswordRequest.getEmail()).orElse(null);
+        log.info("curren user: "+ user);
         if (user == null) {
             result.rejectValue("email", null, "Invalid email");
             return "web/auth/reset-password";
@@ -237,7 +250,9 @@ public class AuthController {
             model.addAttribute("resetPasswordRequest", resetPasswordRequest);
             return "web/auth/enter-verification-code";
         }
-
+        log.info("entering verification code" + resetPasswordRequest.getCode());
+        log.info("entering verification code user"+ user.getCode());
+        // Check if the entered code matches the generated code
         if (resetPasswordRequest.getCode().equals(user.getCode())) {
             user.setCode(null); // Clear code after successful verification
             userService.save(user);
@@ -299,6 +314,8 @@ public class AuthController {
     @ResponseBody
     public ResponseEntity<?> saveOrUpdate(@Valid @ModelAttribute("user") UserModel userModel, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
+
+        // Kiểm tra lỗi
         if (result.hasErrors()) {
             response.put("status", "error");
             response.put("message", "Có lỗi xảy ra, vui lòng kiểm tra lại thông tin!");
@@ -346,4 +363,5 @@ public class AuthController {
         response.put("address", address);
         return ResponseEntity.ok(response);
     }
+
 }
